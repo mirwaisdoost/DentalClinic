@@ -1,0 +1,91 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\MirwaisDoost\\source\\repos\\TeamProject\\DentalClinic\\DentalClinic\\DentalClinic.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\MirwaisDoost\\source\\repos\\TeamProject\\DentalClinic\\DentalClinic\\DentalClinic.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\MirwaisDoost\\source\\repos\\TeamProject\\DentalClinic\\DentalClinic\\DentalClinic.csproj",
+        "projectName": "DentalClinic",
+        "projectPath": "C:\\Users\\MirwaisDoost\\source\\repos\\TeamProject\\DentalClinic\\DentalClinic\\DentalClinic.csproj",
+        "packagesPath": "C:\\Users\\MirwaisDoost\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\MirwaisDoost\\source\\repos\\TeamProject\\DentalClinic\\DentalClinic\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\MirwaisDoost\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.2"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.2": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.2": {
+          "dependencies": {
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.2.0, )"
+            },
+            "EntityFramework.Extended": {
+              "target": "Package",
+              "version": "[6.1.0.168, )"
+            },
+            "MVCGrid.Net": {
+              "target": "Package",
+              "version": "[1.0.0.61, )"
+            },
+            "Microsoft.AspNetCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )",
+              "autoReferenced": true
+            },
+            "Microsoft.AspNetCore.Razor.Design": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.NETCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )",
+              "autoReferenced": true
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[2.2.4, )"
+            },
+            "MvcGrid.Net.Ajax": {
+              "target": "Package",
+              "version": "[1.0.12, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    }
+  }
+}

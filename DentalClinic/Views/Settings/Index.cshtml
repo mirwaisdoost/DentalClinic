@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewData["Title"] = "Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="col-xl-3 col-sm-4 mb-3">
+    <div class="card text-white bg-light o-hidden h-100">
+        <a class="card-body text-primary clearfix small z-1" asp-action="Register" asp-controller="Account">
+            <div class="card-body-icon">
+                <i class="fas fa-fw fa-user"></i>
+            </div>
+            <span class="float-left h4 font-weight-light">Add New User</span>
+        </a>
+        <a class="card-footer text-primary clearfix small z-1">
+            <h6>@*@User.Identity.Name*@</h6> 
+        </a>
+    </div>
+</div>
+
+<div class="col-xl-3 col-sm-4 mb-3">
+    <div class="card text-white bg-light o-hidden h-100">
+        <a asp-action="ChangePassword" asp-controller="Account" class="card-body text-primary clearfix small z-1">
+            <div class="card-body-icon">
+                <i class="fas fa-fw fa-key"></i>
+            </div>
+            <span class="float-left h4 font-weight-light">Change Password</span>
+
+        </a>
+        <a class="card-footer text-primary clearfix small z-1">
+            
+        </a>
+    </div>
+</div>
+
+

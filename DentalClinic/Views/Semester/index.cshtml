@@ -1,0 +1,103 @@
+﻿@model IEnumerable<DentalClinic.Models.Semester>
+
+<div class="card">
+    <div class="card-header">
+        <span class="font-weight-light h4">Semester List</span>
+        <button onclick="NewSemester();" class="btn btn-sm btn-success float-right">
+            <i class="fas fa-plus">
+            </i> Add new
+        </button>
+    </div>
+    <div class="card-body ">
+        <table class="table table-bordered table-hover" id="table" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th hidden>ID</th>
+                    <th>NAME</th>
+                    <th>OPTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td hidden>@item.SemesterId</td>
+                        <td>@item.Name</td>
+                        <td>
+                            <span class="pr-1"><a href="#" onclick="getSemesterID();" class="text-success"><i class="fas fa-edit"></i></a></span>
+                            <span class="pr-1"><a asp-action="Delete" asp-route-id="@item.SemesterId" class="text-danger" onclick="return confirm('Are you sure you want to delete the selected record?')"><i class="fas fa-trash-alt"></i></a></span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div id='SemesterModal' class='modal fade'>
+    <div class="modal-dialog modal-sm" style="width: 100%;">
+        <div class="modal-content">
+            <div id='SemesterModalContent'>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function getSemesterID() {
+        var table = document.getElementsByTagName("table")[0], Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[2].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                NewSemester(table.rows[Index].cells[0].innerHTML);
+            };
+        }
+    }
+
+    function NewSemester(id=0) {
+        var options = { "backdrop": "static", keyboard: true };
+
+        $.ajax({
+
+            url: '@Url.Action("NewSemester", "Semester")',
+            type: 'get',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: {id:id},//scgid: $("#hiddenSessionClassGroupID").val() },
+            datatype: "json",
+
+            success: function (data) {
+                //debugger;
+                $('#SemesterModalContent').html(data);
+                $('#SemesterModal').modal(options);
+                $('#SemesterModal').modal('show');
+                $.validator.unobtrusive.parse("#SemesterForm");
+
+                $('#SemesterModal').on('shown.bs.modal', function () {
+                    $('#name').focus();
+                })
+                return false;
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+                return false;
+            }
+        });
+    }
+
+       $(document).ready(function () {
+        var table = $('#table').DataTable({
+            dom: 'Bfrtip',
+            lengthChange: false,
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'colvis', 'print']
+        });
+
+        table.buttons().container()
+            .appendTo('#example_wrapper .col-md-6:eq(0)');
+    });
+
+</script>

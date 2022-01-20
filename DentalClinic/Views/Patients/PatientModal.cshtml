@@ -1,0 +1,154 @@
+﻿@model DentalClinic.Models.Patient
+
+<form id="PatientForm" name="PatientForm">
+    <div class="card">
+        <div class="card-header">
+            Add new Patient
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" />
+                <div class="col col-12">
+                    <div class="row">
+                        <div class="col col-6">
+                            <label class="control-label">Name:</label>
+                            <input asp-for="PatientId" type="hidden" class="form-control" id="PatientId" />
+                            <input asp-for="Name" type="text" placeholder="Enter patient name" class="form-control" id="patientName" />
+                            <input type="hidden" class="form-control" id="Option" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="col col-6">
+                            <label class="control-label">Last Name:</label>
+                            <input asp-for="LastName" placeholder="Enter patient lastname" type="text" class="form-control" id="lastName" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        <div class="col col-6">
+                            <input type="hidden" id="genderID" />
+                            <label class="control-label mt-1">Gender:</label>
+                            <div class="border rounded p-2">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input asp-for="GenderId" type="radio" class="custom-control-input" id="male" checked="checked" name="searchRadio" value="1" />
+                                    <label class="custom-control-label" for="male">Male</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input  asp-for="GenderId" type="radio" class="custom-control-input" id="female" name="searchRadio" value="2">
+                                    <label class="custom-control-label" for="female">Female</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-6">
+                            <label class="col-form-label">Data of Brith:</label>
+                            <input asp-for="DataOfBrith" type="text" class="form-control" id="dateOfBirth" />
+                            <span asp-validation-for="DataOfBrith" class="text-danger"></span>
+                        </div>
+                        <div class="col col-6">
+                            <label class="control-label">Job Position:</label>
+                            <input asp-for="Job" placeholder="Enter patient job" type="text" class="form-control" id="job" />
+                            <span asp-validation-for="Job" class="text-danger"></span>
+                        </div>
+                        <div class=" col col-6">
+                            <label class="control-label">Phone:</label>
+                            <input asp-for="Phone" placeholder="Phone Number" type="text" class="form-control" id="phone" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="col col-12 mt-2">
+                            <label class="control-label">Address:</label>
+                            <textarea asp-for="Address" type="text" class="form-control" id="Address"></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer alert-light">
+            <div class="row col col-5 float-right">
+                <div class="col col-6 p-1">
+                    <input type="button" class="btn btn-primary btn-sm btn-block" value="Save" onclick="AddOrEditPatient();" />
+                </div>
+                <div class="col col-6 p-1">
+                    <button class="btn btn-secondary btn-sm btn-block" data-dismiss="modal"> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+    <script>
+
+    $('#dateOfBirth').daterangepicker({
+        singleDatePicker: true,
+        startDate: moment().subtract(0, 'days'),
+    }, function (start, end, label) {
+        BirthDate = (moment(start).format("DD-MM-YYYY"));
+    });
+
+    var BirthDate;
+
+    function AddOrEditPatient() {
+         BirthDate = moment($("#dateOfBirth").val()).format("DD-MM-YYYY");
+
+         dob = moment($("#dateOfBirth").val());
+         var Now = moment(Date.now());
+         var diffDays = Now.diff(dob, 'months');
+
+         if (!$("#PatientForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+
+         var name = $("#patientName").val();
+         var lastName = $("#lastName").val();
+         var job = $("#job").val();
+         var phone = $("#phone").val();
+         var address = $("#Address").val();
+         var id = $("#PatientId").val();
+         var genderID;
+
+        if (document.getElementById('male').checked) {
+            if ($("#Option").val() == 'Edit') { // the option is fill from patient index 
+                genderID = $("#male").val();
+                name = "Mr." + name;
+            } else
+                genderID = $("#male").val();
+        }
+        else if (document.getElementById('female').checked) {
+            if ($("#Option").val() == 'Edit') {
+                genderID = $("#female").val();
+                name = "Ms." + name;
+            } else
+                genderID = $("#female").val();
+        }
+        if (diffDays <= 35) {
+            alert("Patient can not be less than 3 years old!")
+        } else {
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: '@Url.Action("AddOrEdit", "Patients")',
+                data: { id: id, name: name, lastName: lastName, genderID: genderID, dateOfBirth: BirthDate, job: job, phone: phone, address: address },
+                //contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    if ($("#Option").val() == 'patient' || $("#Option").val() == 'Edit')
+                        location.href = '/Patients/Index';
+                    else
+                        alert("New Patient is successfully added!");
+
+                    name = $("#patientName").val('');
+                    lastName = $("#lastName").val('');
+                    job = $("#job").val('');
+                    phone = $("#phone").val('');
+                    address = $("#Address").val('');
+                },
+                error: function (xhr) { alert("Error"); }
+
+            });
+        }
+    }
+    </script>

@@ -1,0 +1,109 @@
+﻿@model IEnumerable<DentalClinic.Models.Doctor>
+
+<div class="card">
+    <div class="card-header">
+        <span class="h4 font-weight-light">Doctor List</span>
+        <button onclick="NewDoctor();" class="btn btn-success btn-sm float-right">
+            <i class="fas fa-plus">
+            </i> New doctor
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover" id="table" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th hidden>ID</th>
+                    <th>Name</th>
+                    <th>Father Name</th>
+                    <th>Last Name</th>
+                    <th>Email Address</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td hidden>@item.DoctorId</td>
+                        <td>@item.Name</td>
+                        <td>@item.FatherName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.Email</td>
+                        <td>
+                            <span class="pr-1"><a href="#" onclick="getDoctorID();" class="text-success"><i class="fas fa-edit"></i> </a></span>
+                            <span class="pl-1"><a asp-action="Delete" asp-route-id="@item.DoctorId" class="text-danger ml-1" onclick="return confirm('Are you sure to delete this record?')"><i class="fas fa-trash"></i>  </a></span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div id='DoctorModal' class='modal fade'>
+    <div class="modal-dialog modal-lg" style="width: 100%;">
+        <div class="modal-content">
+            <div id='DoctorModalContent'>
+                <input type="hidden" id="b"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getDoctorID() {
+        var table = document.getElementsByTagName("table")[0], Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[5].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                NewDoctor(table.rows[Index].cells[0].innerHTML);
+            };
+        }
+    }
+
+    function NewDoctor(id=0) {
+        var options = { "backdrop": "static", keyboard: true };
+
+        $.ajax({
+
+            url: '@Url.Action("NewDoctor", "Doctors")',
+            type: 'get',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: {id:id},//scgid: $("#hiddenSessionClassGroupID").val() },
+            datatype: "json",
+
+            success: function (data) {
+                //debugger;
+                $('#DoctorModalContent').html(data);
+                $('#DoctorModal').modal(options);
+                $('#DoctorModal').modal('show');
+                $.validator.unobtrusive.parse("#DoctorForm"); // for binding Company form
+
+                $('#DoctorModal').on('shown.bs.modal', function () {
+                    $('#Name').focus();
+                    $('#option').val('Doctor');
+                })
+                return false;
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+                return false;
+            }
+        });
+    }
+
+$(document).ready(function () {
+        var table = $('#table').DataTable({
+            dom: 'Bfrtip',
+            lengthChange: false,
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'colvis', 'print']
+        });
+
+        table.buttons().container()
+            .appendTo('#example_wrapper .col-md-6:eq(0)');
+    });
+
+</script>

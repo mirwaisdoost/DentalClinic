@@ -1,0 +1,150 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <environment names="Development">
+        <link href="~/lib/bootstrap/css/Ccss.css" rel="stylesheet" />
+        <link href="~/lib/bootstrap/css/fontawesome-all.css" rel="stylesheet" />
+        <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+        <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <link href="~/lib/bootstrap/css/fonts.css" rel="stylesheet" />
+        <script src="~/lib/bootstrap/js/bootstrapjquery.js"></script>
+        <script src="~/lib/bootstrap/js/proper.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </environment>
+    <title>@ViewBag.Title</title>
+</head>
+
+<body>
+    <section>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-info fixed-top d-flex bd-highlight shadow-lg pb-1 pt-1">
+            <div class="p-2 flex-grow-1 bd-highlight">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#NavBar" aria-controls="NavBar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="NavBar">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a href="~/Home/Index" class="nav-link">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Services</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="login" class="float-right rounded p-0 shadow-lg">
+                <a asp-action="Login" asp-controller="Account" class="nav-link rounded btn btn-outline-light btn-sm"><i class="fas fa-sign-in-alt"></i> Login</a>
+            </div>
+        </nav>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="card-deck">
+                <div class="card" style="width:400px">
+                    <img class="card-img-top" src="~/lib/images/GhalibLogo.png" alt="Card image">
+                    <div class="card-body">
+                        <h4 class="card-title">John Doe</h4>
+                        <p class="card-text">Some example text.</p>
+                        <a href="#" class="btn btn-primary">See Profile</a>
+                    </div>
+                </div>
+                <div class="card bg-warning">
+                    <div class="card-body text-center">
+                        <p class="card-text">Some text inside the second card</p>
+                    </div>
+                </div>
+                <div class="card bg-success">
+                    <div class="card-body text-center">
+                        <p class="card-text">Some text inside the third card</p>
+                    </div>
+                </div>
+                <div class="card bg-danger">
+                    <div class="card-body text-center">
+                        <p class="card-text">Some text inside the fourth card</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <section id="footer" class="bg-light p-5 shadow-lg">
+            <div class="container">
+                <div class="row text-center text-xs-center text-sm-left text-md-left">
+                    <div class="col-xs-12 col-sm-4 col-md-4">
+                        <h5>Quick links</h5>
+                        <ul class="list-unstyled quick-links">
+                            <li><a href="javascript:void();"><i class="fas fa-home"></i>Home</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-address-book"></i>About</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-edit"></i>FAQ</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-hourglass-start"></i>Get Started</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-video"></i>Videos</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4">
+                        <h5>Quick links</h5>
+                        <ul class="list-unstyled quick-links">
+                            <li><a href="javascript:void();"><i class="fas fa-home"></i>Home</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-address-book"></i>About</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-edit"></i>FAQ</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-hourglass-start"></i>Get Started</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-video"></i>Videos</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-4">
+                        <h5>Quick links</h5>
+                        <ul class="list-unstyled quick-links">
+                            <li><a href="javascript:void();"><i class="fas fa-home"></i>Home</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-address-book"></i>About</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-edit"></i>FAQ</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-hourglass-start"></i>Get Started</a></li>
+                            <li><a href="javascript:void();"><i class="fas fa-video"></i>Videos</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-5">
+                        <ul class="list-unstyled list-inline social text-center">
+                            <li class="list-inline-item"><a href="javascript:void();"><i class="fab fa-2x fa-facebook"></i></a></li>
+                            <li class="list-inline-item"><a href="javascript:void();"><i class="fab fa-twitter"></i></a></li>
+                            <li class="list-inline-item"><a href="javascript:void();"><i class="fab fa-instagram"></i></a></li>
+                            <li class="list-inline-item"><a href="javascript:void();"><i class="fab fa-google-plus"></i></a></li>
+                            <li class="list-inline-item"><a href="javascript:void();" target="_blank"><i class="fas fa-envelope"></i></a></li>
+                        </ul>
+                    </div>
+                    </hr>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                    </div>
+                    </hr>
+                </div>
+            </div>
+
+            <footer>
+                <p class="text-center text-warning" style="font-size:14px;"> &copy; 2019 Dental Clinic Management System. All Rights Reserved | Design by Mirwais Doost</p>
+            </footer>
+
+        </section>
+    </footer>
+</body>
+</html>

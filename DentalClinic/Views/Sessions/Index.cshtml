@@ -1,0 +1,117 @@
+﻿@model IEnumerable<DentalClinic.Models.Session>
+
+
+<div class="card">
+    <div class="card-header">
+        <span class="h4 font-weight-light">Session List</span>
+        <button onclick="NewSession();"
+                class="btn btn-success btn-sm float-right">
+            <i class="fas fa-plus">
+            </i> Add new
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover" id="table" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th hidden>
+                        @Html.DisplayNameFor(model => model.SessionId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        Options
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td hidden>
+                            @Html.DisplayFor(modelItem => item.SessionId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            <a href="#" onclick="getSessionID();" class="text-success mr-2"><i class="fas fa-edit"></i> </a>
+                            <a asp-action="Delete" asp-route-id="@item.SessionId" class="text-danger"><i class="fas fa-trash-alt"></i> </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<div id='SessionModal' class='modal fade'>
+    <div class="modal-dialog modal-sm" style="width: 100%;">
+        <div class="modal-content">
+            <div id='SessionModalContent'>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function getSessionID() {
+        var table = document.getElementsByTagName("table")[0], Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[2].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                NewSession(table.rows[Index].cells[0].innerHTML);
+            };
+        }
+    }
+
+    function NewSession(id = 0) {
+        var options = { "backdrop": "static", keyboard: true };
+
+        $.ajax({
+
+            url: '@Url.Action("NewSession", "Sessions")',
+            type: 'get',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: {id:id},//scgid: $("#hiddenSessionClassGroupID").val() },
+            datatype: "json",
+
+            success: function (data) {
+                //debugger;
+                $('#SessionModalContent').html(data);
+                $('#SessionModal').modal(options);
+                $('#SessionModal').modal('show');
+                $.validator.unobtrusive.parse("#SessionForm");
+
+                $('#SessionModal').on('shown.bs.modal', function () {
+                    $('#name').focus();
+                })
+
+                return false;
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+                return false;
+            }
+        });
+    }
+
+       $(document).ready(function () {
+        var table = $('#table').DataTable({
+            dom: 'Bfrtip',
+            lengthChange: false,
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'colvis', 'print']
+        });
+
+        table.buttons().container()
+            .appendTo('#example_wrapper .col-md-6:eq(0)');
+    });
+
+</script>

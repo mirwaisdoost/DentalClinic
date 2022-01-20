@@ -1,0 +1,121 @@
+﻿@model IEnumerable<DentalClinic.Models.TeethNumber>
+
+<div class="card">
+    <div class="card-header">
+        <span class="h4 font-weight-light">Teeth List</span>
+        <button onclick="NewTeethNumber();"
+           class="btn btn-success btn-sm float-right">
+            <i class="fas fa-plus">
+            </i> Add New Teeth
+        </button>
+    </div>
+    <div class="card-body">
+        <table  class="table table-bordered table-hover" id="table" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th hidden>ID</th>
+                    <th>NUMBER</th>
+                    <th>LEFT OR RIGHT</th>
+                    <th>TOP OR BOTTOM</th>
+                    <th>ADU OR CHD</th>
+                    <th>OPTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td hidden>
+                            @Html.DisplayFor(modelItem => item.TeethNumberId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Number)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LeftOrRight)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TopOrButtom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AduOrChd)
+                        </td>
+                        <td>
+                            <span class="pr-1"><a href="#" onclick="getTeethNumberID();" class=" text-success"><i class="fas fa-edit"></i></a></span>
+                            <span class="pl-1"><a asp-action="Delete" asp-route-id="@item.TeethNumberId" class="text-danger ml-1" onclick="return confirm('Are you sure to delete this record?')"><i class="fas fa-trash"></i></a></span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div id='TeethNumberModal' class='modal fade'>
+    <div class="modal-dialog" style="width: 100%;">
+        <div class="modal-content">
+            <div id='TeethNumberModalContent'>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function getTeethNumberID() {
+        var table = document.getElementsByTagName("table")[0], Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[5].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                NewTeethNumber(table.rows[Index].cells[0].innerHTML);
+            };
+        }
+    }
+
+    function NewTeethNumber(id=0) {
+        var options = { "backdrop": "static", keyboard: true };
+
+        $.ajax({
+
+            url: '@Url.Action("NewTeethNumber", "TeethNumbers")',
+            type: 'get',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: {id:id},//scgid: $("#hiddenSessionClassGroupID").val() },
+            datatype: "json",
+
+            success: function (data) {
+                //debugger;
+                $('#TeethNumberModalContent').html(data);
+                $('#TeethNumberModal').modal(options);
+                $('#TeethNumberModal').modal('show');
+                $.validator.unobtrusive.parse("#TeethNumberForm");
+
+                $('#TeethNumberModal').on('shown.bs.modal', function () {
+                    $('#number').focus();
+                })
+
+                return false;
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+                return false;
+            }
+        });
+    }
+
+       $(document).ready(function () {
+        var table = $('#table').DataTable({
+            dom: 'Bfrtip',
+            lengthChange: false,
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'colvis', 'print']
+        });
+
+        table.buttons().container()
+            .appendTo('#example_wrapper .col-md-6:eq(0)');
+    });
+
+</script>

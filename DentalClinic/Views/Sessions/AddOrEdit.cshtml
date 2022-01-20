@@ -1,0 +1,72 @@
+﻿@model DentalClinic.Models.Session
+
+
+
+<form id="SessionForm" name="SessionForm">
+    <div class="card">
+        <div class="card-header">
+            New Session 
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group col col-12">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="SessionId" type="hidden" class="form-control" id="SessionId" />
+                    <input asp-for="Name" class="form-control" id="name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-12">
+                    <label asp-for="Status" class="control-label"></label>
+                    @*<input asp-for="Status" class="form-control" />*@
+                    <select asp-for="Status" class="form-control" id="status">
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col col-6 p-1">
+                    <input type="button" class="btn btn-primary btn-sm btn-block" value="Save" onclick="AddOrEditSession();" />
+                </div>
+                <div class="col col-6 p-1">
+                    <button class="btn btn-secondary btn-sm btn-block" data-dismiss="modal"> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+<script>
+    function AddOrEditSession() {
+
+        if (!$("#SessionForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+        var name = $("#name").val();
+        var status = $("#status").val();
+        var id = $("#SessionId").val();
+        
+        $.ajax({
+            type: "POST",
+            async:true,
+            url: '@Url.Action("AddOrEdit", "Sessions")',
+            data: { id:id,name: name, status: status },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                location.href='/Sessions/Index';
+            },
+            error: function (xhr) { alert("Error"); }
+
+        });
+    }
+</script>

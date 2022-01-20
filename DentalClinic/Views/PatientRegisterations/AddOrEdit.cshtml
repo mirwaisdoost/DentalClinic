@@ -1,0 +1,2188 @@
+﻿@model DentalClinic.Models.PatientRegisteration
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <body onload="NewCheck(); NewPayment();">
+
+
+        <div class="modal fade" id="Search" role="dialog">
+            <div class="modal-dialog" style="max-width: 55%;" role="document">
+                <div class="modal-content">
+                    <div class="card">
+                        <div class="card-header text-center h5 font-weight-light">
+                            Search for registered patient
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="card-body pb-1">
+                            <div class="row">
+                                <div class="row col col-7">
+                                    <div class=" col col-11">
+                                        <div class="input-group">
+                                            <input type="text" id="search" placeholder="Search Patient" class="form-control" />
+                                            <div class="input-group-append">
+                                                <button type="button" class="input-group-text" id="searchBtn" value="Search" onclick="searchByPatient();"><i class="fas fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-5">
+                                    <label class="mr-2 font-weight-normal">Search by : </label>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" class="custom-control-input" id="id" name="searchRadio" />
+                                        <label class="custom-control-label" for="id">ID</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" class="custom-control-input" id="name" checked="checked" name="searchRadio">
+                                        <label class="custom-control-label" for="name">NAME</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col col-12 m-0 p-0 mt-2 mb-4">
+                                <div class="card">
+                                    <div class="card-header text-center p-2" id="patientDetalis">Patient Details</div>
+                                    <div class="card-body p-0 pr-1 pl-1 overflow-auto" style="height:150px;">
+                                        <table class="table table-hover mt-1" id="PatientDetails">
+                                            <thead class="table table-sm ">
+                                                <tr>
+                                                    <th>Register#</th>
+                                                    <th>Date</th>
+                                                    <th>Name</th>
+                                                    <th>L/Name</th>
+                                                    <th>Fee</th>
+                                                    <th>Options</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <nav>
+            <div class="nav nav-tabs border rounded-top" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#Registration" role="tab" aria-controls="nav-home" aria-selected="true"><i class="fas fa-save"></i> Registration </a>
+                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#Check" role="tab" aria-controls="nav-profile" aria-selected="false"><i class="fas fa-user-md"></i> Check</a>
+                <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#Payment" role="tab" aria-controls="nav-contact" aria-selected="false"> <i class="fas fa-balance-scale"></i> Payment</a>
+                <div class="float-right mt-2">
+                    <a href="#" class="ml-3 mr-3" data-toggle="modal" data-target="#Search"><i class="fas fa-search"></i></a>
+                    <span><a class="btn btn-success float-right btn-sm" asp-action="AddOrEdit" asp-controller="PatientRegisterations"><i class="fas fa-plus-square"></i> New Registration</a></span>
+                </div>
+            </div>
+        </nav>
+        <div class="tab-content border-left border-bottom border-right p-2 mb-4 rounded-bottom" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="Registration" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="row m-0 p-0 ">
+
+                    <div class=" col col-5 mt-1 mr-3 pb-1 p-0">
+                        <div class="card ">
+                            <div class="card-header text-center p-2">Patient Information</div>
+                            <form id="RegistrationForm" name="RegistrationForm">
+                                <div class="card-body p-0 p-4 pt-0">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" id="RegistrationID" />
+                                    <div><input id="AutoPatientID" type="hidden" style="visibility:hidden; height:0;" placeholder="Patient ID" /></div>
+                                    <div class="form-group pt-0">
+                                        <label asp-for="Date" class="control-label">Date:</label>
+                                        <input asp-for="Date" type="text" id="RegistrationDate" class="form-control" />
+                                        <span asp-validation-for="Date" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="PatientId" class="control-label">Patient:</label>
+                                        <div class="input-group">
+                                            <input asp-for="PatientId" type="text" id="pid" placeholder="Search" class="form-control" />
+                                            <div class="input-group-append">
+                                                <button type="button" class="input-group-text" id="myBtn" onclick="NewPtient();">Add</button>
+                                            </div>
+                                        </div>
+                                        <span asp-validation-for="PatientId" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="DoctorId" class="control-label">Doctor:</label>
+                                        <div class="input-group">
+                                            <input asp-for="DoctorId" type="text" id="did" placeholder="Search" class="form-control" />
+                                            <div class="input-group-append">
+                                                <button type="button" class="input-group-text" id="myBtn" onclick="NewDoctor();">Add</button>
+                                            </div>
+                                        </div>
+                                        <span asp-validation-for="DoctorId" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Age" class="control-label">Age:</label>
+                                        <input asp-for="Age" class="form-control" id="Age" autocomplete="off" min="0" readonly="readonly" />
+                                        <span asp-validation-for="Age" class="text-danger"></span>
+                                        <input asp-for="RgisterationFee" type="hidden" class="form-control" id="fee" placeholder="Enter Registration Fee" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="card-footer p-2 alert-light">
+                                    <div class="form-row">
+                                        <div class=" col col-md-2">
+                                            <input id="btnSave" type="button" onclick="Registration();" value="Save" class="btn btn-primary btn-block btn-sm" />
+                                        </div>
+                                        <div class=" col col-md-4 float-right">
+                                            <input id="btnPrint" type="button" href="#" data-toggle="modal" data-target="#PrintRegistration" onclick="printRegistration();" value="Print Registration" class="btn btn-link btn-block btn-sm float-right" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class=" row col col-7 pt-1 pb-1 pl-1 pr-0">
+                        <div class="col col-12 mb-2 p-0">
+                            <div class="card h-100 w-100 position-absolute m-0">
+                                <div class="card-header text-center p-2"> Patient sicknesses </div>
+                                <div class="card-body p-3 overflow-auto">
+                                    @*<div class="input-group mb-1">
+                                        <input id="sickness" class="form-control" placeholder="Search" />
+                                        <div class="input-group-append">
+                                            <button type="button" class="input-group-text" onclick="AddTable1Row();">Add</button>
+                                        </div>
+                                    </div>*@
+                                    <div class="row pr-3">
+                                        <div class="col col-6 pr-0">
+                                            <div class="card">
+                                                <div class="card-header p-1">Diseases List</div>
+                                                <div class="card-body overflow-auto" style="height:125px;">
+                                                    <table id="Sickness" class="table table-hover table-sm">
+                                                        <thead class="table-sm">
+                                                            <tr></tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-6 pr-0">
+                                            <div class="card">
+                                                <div class="card-header p-1">Selected Diseases</div>
+                                                <div class="card-body overflow-auto" style="height:125px;">
+                                                    <table id="SelectedSickness" class="table table-hover table-sm">
+                                                        <thead class="table-sm">
+                                                            <tr></tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col col-6 pl-1 overflow-auto" style="height:0px;">
+                                            <div class="card">
+                                                <div class="card-header p-1">Selected Treathments</div>
+                                                <div class="card-body overflow-auto" style="height:125px;">
+                                                    <table id="SicknessId" class="table table-hover table-sm">
+                                                        <thead class="table-sm ">
+                                                            <tr> </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-6 pl-1 overflow-auto" style="height:0px;">
+                                            <div class="card">
+                                                <div class="card-header p-1">Selected Treathments</div>
+                                                <div class="card-body overflow-auto" style="height:125px;">
+                                                    <table id="SelectedSicknessId" class="table table-hover table-sm">
+                                                        <thead class="table-sm ">
+                                                            <tr> </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col col-12 p-0">
+                            <div class="card h-100 w-100 position-absolute">
+                                <div class="card-header text-center p-2"> Patient Teeth <button class="btn btn-outline-dark btn-sm float-right p-0 pl-1 pr-1 m-0 " data-toggle="modal" data-target="#TeethModal"><i class="fas fa-plus-square"></i></button> </div>
+                                <div class="card-body p-3 overflow-auto">
+                                    <div>
+                                        <table id="Teeth" class="table table-hover table-sm table-borderless p-0">
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="overflow-auto" style="height:0px;">
+                                        <table id="TeethId" class="table table-hover table-sm table-borderless p-0">
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col col-2">
+                        <input id="AutoSicknessID" type="hidden" class="form-control m-0 " placeholder="Sickness ID" />
+                    </div>
+                    <div class="col col-2">
+                        <input id="AutoSicknessName" type="hidden" class="form-control m-0 " placeholder="Sickness Name" />
+                    </div>
+                    <div class="col col-2">
+                        <input id="AutoDoctorID" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                    </div>
+                    <div class="col col-2">
+                        <input id="AutoTeethID" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                    </div>
+                    <div class="col col-2">
+                        <input id="AutoTeethNumber" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                    </div>
+                    <div class="col col-2">
+                        <input id="AutoTeethLeftorRight" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                    </div>
+                    <div class="col col-2">
+                        <input id="AutoTeethToporButtom" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                    </div>
+                    <div class="col col-2">
+                        <input id="AutoTeethAduorChd" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                    </div>
+                    <div class="col col-2">
+                        <input id="AutoPatientSearchID" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="Check" role="tabpanel" aria-labelledby="nav-profile-tab"> </div>
+
+            <div class="tab-pane fade" id="Payment" role="tabpanel" aria-labelledby="nav-contact-tab"> </div>
+
+
+        </div>
+
+        <div class="modal fade" id="patientcheck" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    @Html.Partial("DrugModal")
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="otherFeesModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    @Html.Partial("OtherCheckModal")
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="TeethModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content modal-lg">
+                    @Html.Partial("TeethModal")
+                </div>
+            </div>
+        </div>
+
+
+        <div id='PatientModal' class='modal fade'>
+            <div class="modal-dialog" style="width: 100%;">
+                <div class="modal-content">
+                    <div id='PatientModalContent'>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id='DoctorModal' class='modal fade'>
+            <div class="modal-dialog modal-lg" style="width: 100%;">
+                <div class="modal-content">
+                    <div id='DoctorModalContent'>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="PrintRegistration" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Print Voucher</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <div class="row pt-0">
+                            <div class="col col-12 bg-light">
+                                <button class="btn float-right" onclick="print('#print');"><i class="fas fa-print"></i></button>
+                            </div>
+                            <div class="col col-12" style="height:600px;" id="print">
+                                <div class="text-center">
+                                    <img src="~/lib/images/GhalibLogo.png" width="10%" class="img-fluid rounded-circle shadow-sm" />
+                                    <h2 class="font-weight-light">Ghalib Dental Clinic</h2>
+                                    <h5 class="font-weight-normal">Patient Registration</h5>
+                                </div>
+                                <div class="row mt-5">
+                                    <div class="col col-6">
+                                        <div><label class="col col-5 font-weight-bold">Appointment#:</label><label id="Appointment" class="col col-7"></label></div>
+                                        <div><label class="col col-5 font-weight-bold">Date:</label><label id="regDate" class="col col-7"></label></div>
+                                        <div><label class="col col-5 font-weight-bold">Patient Name:</label><label id="pName" class="col col-7"></label></div>
+                                    </div>
+                                    <div class="col col-6">
+                                        <div><label class="col col-6 font-weight-bold">Doctor:</label><label id="doctor" class="col col-6"></label></div>
+                                        <div><label class="col col-6 font-weight-bold">Age:</label><label id="pAge" class="col col-6"></label></div>
+                                        <div><label class="col col-6 font-weight-bold">Registration Fee:</label><label id="regFee" class="col col-6"></label></div>
+                                    </div>
+                                </div>
+                                <div class="col col-12" style="margin-top:200px;">
+                                    <div class="row ">
+                                        <div class="col col-6 ">
+                                            <div class="border-bottom border-dark mr-5">Approved by:</div>
+                                        </div>
+                                        <div class="col col-6">
+                                            <div class="border-bottom border-dark mr-5">Received by:</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-12 border-top border-dark" style="margin-top:900px;">
+                                    <div class="row ">
+                                        <div class="col col-6 ">
+                                            Address: Moaref Street, Herat, Afghanistan
+                                        </div>
+                                        <div class="col col-6">
+                                            Phone#: (0093) 797 044 097
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="PatientReceipt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Print Voucher</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">x</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pt-0">
+                        <div class="row pt-0">
+                            <div class="col col-12 bg-light">
+                                <button class="btn float-right" onclick="print('#printReceipt');"><i class="fas fa-print"></i></button>
+                            </div>
+                            <div class="col col-12" style="height:600px;" id="printReceipt">
+                                <div class="text-center">
+                                    <img src="~/lib/images/GhalibLogo.png" width="10%" class="img-fluid rounded-circle shadow-sm" />
+                                    <h2 class="font-weight-light">Ghalib Dental Clinic</h2>
+                                    <h5 class="font-weight-normal">Patient Receipt</h5>
+                                </div>
+                                <div class="row mt-5">
+                                    <div class="col col-6">
+                                        <div><label class="col col-5 font-weight-bold">Appointment#:</label><label id="Appointment1" class="col col-7"></label></div>
+                                        <div><label class="col col-5 font-weight-bold">Date:</label><label id="regDate1" class="col col-7"></label></div>
+                                        <div><label class="col col-5 font-weight-bold">Patient Name:</label><label id="pName1" class="col col-7"></label></div>
+                                    </div>
+                                    <div class="col col-6">
+                                        <div><label class="col col-6 font-weight-bold">Doctor:</label><label id="doctor1" class="col col-6"></label></div>
+                                        <div><label class="col col-6 font-weight-bold">Age:</label><label id="pAge1" class="col col-6"></label></div>
+                                    </div>
+                                </div>
+                                <table width="100%" class="table mt-5 mb-5" id="Receipt">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Payment#</th>
+                                            <th>Check#</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div class="col col-12" style="margin-top:100px;">
+                                    <div class="row ">
+                                        <div class="col col-6 ">
+                                            <div class="border-bottom border-dark mr-5">Approved by:</div>
+                                        </div>
+                                        <div class="col col-6">
+                                            <div class="border-bottom border-dark mr-5">Received by:</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-12 border-top border-dark" style="margin-top:870px;">
+                                    <div class="row ">
+                                        <div class="col col-6 ">
+                                            Address: Moaref Street, Herat, Afghanistan
+                                        </div>
+                                        <div class="col col-6">
+                                            Phone#: (0093) 797 044 097
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @section Scripts{
+
+            <script>
+
+    //$(document).ready(function () {
+    //    $('#example').DataTable();
+    //});
+
+    //setting focus on first text box of the modal
+    $(document).ready(function () {
+        $("#patientcheck").on('shown.bs.modal', function () {
+            $(this).find('#drugTypeID').focus();
+        });
+    });
+
+    $(document).ready(function () {
+        $("#Search").on('shown.bs.modal', function () {
+            $(this).find('#search').focus();
+        });
+    });
+
+    //setting focus on first text box of the modal
+    $(document).ready(function () {
+        $("#otherFeesModal").on('shown.bs.modal', function () {
+            $(this).find('#FeeTypeID').focus();
+        });
+    });
+
+    function me() {
+        document.getElementById('fee').type = 'hidden';
+    }
+
+    var RDate; // Registration Date
+    var CDate; // Check Date
+    var PDate; // Payment Date
+    var TreathmentId = [];
+    var SelectedTreathmentId = [];
+    var DrugId = [];
+    var OtherCheckId = [];
+
+    var drugTotal = 0;
+    var otherTotal = 0;
+
+    function NewPtient() {
+        var options = { "backdrop": "static", keyboard: true };
+
+        $.ajax({
+
+            url: '@Url.Action("NewPatient", "Patients")',
+            type: 'get',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: {},//scgid: $("#hiddenSessionClassGroupID").val() },
+            datatype: "json",
+
+            success: function (data) {
+                //debugger;
+                $('#PatientModalContent').html(data);
+                $('#PatientModal').modal(options);
+                $('#PatientModal').modal('show');
+
+                $('#PatientModal').on('shown.bs.modal', function () {
+                    $('#patientName').focus();
+                })
+
+                $('#PatientModal').on('hidden.bs.modal', function () {
+                    $('#pid').focus();
+                })
+
+                $.validator.unobtrusive.parse("#PatientForm"); // for binding Patient form
+                return false;
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+                return false;
+            }
+        });
+    }
+
+    function NewDoctor() {
+        var options = { "backdrop": "static", keyboard: true };
+        $.ajax({
+
+            url: '@Url.Action("NewDoctor", "Doctors")',
+            type: 'get',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: {},//scgid: $("#hiddenSessionClassGroupID").val() },
+            datatype: "json",
+
+            success: function (data) {
+                //debugger;
+                $('#DoctorModalContent').html(data);
+                $('#DoctorModal').modal(options);
+                $('#DoctorModal').modal('show');
+
+                $('#DoctorModal').on('shown.bs.modal', function () {
+                    $('#Name').focus();
+                })
+
+                $('#DoctorModal').on('hidden.bs.modal', function () {
+                    $('#did').focus();
+                })
+
+                $.validator.unobtrusive.parse("#DoctorForm"); // for binding Patient form
+                return false;
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+                return false;
+            }
+        });
+    }
+
+    function NewCheck() {
+        if($("#RegistrationID").val()!='')
+            searchByRegistration($("#RegistrationID").val());
+
+        $.ajax({
+
+            url: '@Url.Action("NewCheck", "PatientRegisterations")',
+            type: 'get',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: {},//scgid: $("#hiddenSessionClassGroupID").val() },
+            datatype: "json",
+
+            success: function (data) {
+                //debugger;
+                $('#Check').html(data);
+                $.validator.unobtrusive.parse("#CheckForm"); // for binding Patient form
+                return false;
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+                return false;
+            }
+        });
+    }
+
+    function NewPayment() {
+
+        function fillAllPayments() {
+
+            $.ajax({
+                type: "GET",
+                async: true,
+                url: '@Url.Action("searchByRegistration", "PatientRegisterations")',
+                data: { RegistrationID: $("#RegistrationID").val() },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    var item = $.parseJSON(data);
+
+                    var table6 = document.getElementById('AllPayments');
+                    var rowCount6 = table6.rows.length;
+                    for (var i = rowCount6 - 1; i > 0; i--) {
+                        table6.deleteRow(i);
+                    }
+
+
+                    for (var i = 0; i < item.patientRegistrationPaymentID.length; i++) {
+
+                        var newRow = table6.insertRow(table6.rows.length);
+                        var cell1 = newRow.insertCell(0);
+                        var cell2 = newRow.insertCell(1);
+                        var cell3 = newRow.insertCell(2);
+                        var cell4 = newRow.insertCell(3);
+                        var cell5 = newRow.insertCell(4);
+                        var cell6 = newRow.insertCell(5);
+
+                        cell1.innerHTML = moment(item.patientRegistrationPaymentDate[i]).format("DD-MMM-YYYY");
+                        cell2.innerHTML = item.patientRegistrationPaymentID[i];
+                        cell3.innerHTML = item.patientRegistrationPaymentCheckID[i];
+                        cell4.innerHTML = item.drugFee[i];
+                        cell5.innerHTML = item.otherFees[i];
+                        cell6.innerHTML = item.paidAmount[i];
+                    }
+                    $.each(item, function () {
+                        console.log(this);
+                    });
+                },
+                error: function (xhr) { alert("Error"); }
+            });
+        }
+
+        if ($("#RegistrationID").val() != '') {
+            fillAllPayments();
+        }
+
+        if ($("#patientCheckID").val() != '') {
+            searchByCheck($("#patientCheckID").val());
+        }
+
+        var options = { "backdrop": "static", keyboard: true };
+
+        $.ajax({
+
+            url: '@Url.Action("NewPayment", "PatientRegisterations")',
+            type: 'get',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: {},//scgid: $("#hiddenSessionClassGroupID").val() },
+            datatype: "json",
+
+            success: function (data) {
+                //debugger;
+                $('#Payment').html(data);
+                $.validator.unobtrusive.parse("#PaymentForm"); // for binding Patient form
+                return false;
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+                return false;
+            }
+        });
+    }
+
+
+    function Registration() {
+
+        if (RDate == null)
+            RDate = moment($("#RegistrationDate").val()).format("DD-MM-YYYY");
+
+        if (!$("#RegistrationForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+        if ($("#RegistrationID").val() == '')
+            $("#RegistrationID").val(0)
+
+        var prgid = $("#RegistrationID").val();
+
+        var sicknessList = new Array();
+        var table3 = document.getElementById('SelectedSicknessId');
+        for (var i = 1; i < table3.rows.length; i++) {
+
+            sicknessList.push(table3.rows[i].cells[0].innerHTML);
+        }
+
+        var TeethList = new Array();
+        var NoteList = new Array();
+        var table2 = document.getElementById('TeethId');
+        for (var i = 0; i < table2.rows.length; i++) {
+            NoteList.push(table2.rows[i].cells[1].innerHTML);
+            TeethList.push(table2.rows[i].cells[0].innerHTML);
+        }
+
+        var DrugID = new Array();
+        var DrugQuantity = new Array();
+        var DrugPrice = new Array();
+        var table4 = document.getElementById('Drug');
+        for (var i = 1; i < table4.rows.length; i++) {
+
+            DrugID.push(table4.rows[i].cells[0].innerHTML);
+            DrugQuantity.push(table4.rows[i].cells[2].innerHTML);
+            DrugPrice.push(table4.rows[i].cells[4].innerHTML);
+
+        }
+
+        var FeeID = new Array();
+        var Price = new Array();
+        var table5 = document.getElementById('OtherCheck');
+        for (var i = 1; i < table5.rows.length; i++) {
+
+            FeeID.push(table5.rows[i].cells[0].innerHTML);
+            Price.push(table5.rows[i].cells[3].innerHTML);
+        }
+
+        var DoctorID = $("#AutoDoctorID").val();
+        var PatientID = $("#AutoPatientID").val();
+        var age = $("#Age").val();
+        $.ajax({
+            type: "POST",
+            async:true,
+            url: '@Url.Action("Registration", "PatientRegisterations")',
+            data: { prgid:prgid, Rdate:RDate, did: DoctorID, pid: PatientID, age:age, sickness: sicknessList, teeth: TeethList, note:NoteList },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var item = $.parseJSON(data);
+                $("#RegistrationID").val(item[0]);
+                if ($("#RegistrationID").val() == 0)
+                    alert("Registration# ( " + prgid + " ) is successfully updated!");
+                else
+                    alert("New Registration has been succesfully done with Registration# (" + $("#RegistrationID").val() + " )");
+                PatientDetails(item[1]);
+                $('#fee').val(item[2]);
+                //location.href='/PatientRegisterations';
+            },
+            error: function (xhr) { alert("Error"); }
+
+        });
+    }
+
+    function Check() {
+
+        if (CDate == null)
+            CDate = moment($("#checkDate").val()).format("DD-MM-YYYY");
+
+        if (!$("#CheckForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+        if ($("#patientCheckID").val() == '')
+            $("#patientCheckID").val(0)
+
+        var DoctorNote = $("#DoctorNote").val();
+        var prgcid = $("#patientCheckID").val();
+        var prid = $("#RegistrationID").val();
+        var pid = $("#AutoPatientID").val(); // for finding the last patient registration
+        var StudentId = $("#StudentId").val();
+        var DrugQuantity = new Array();
+        var DrugPrice = new Array();
+        var table4 = document.getElementById('Drug');
+        for (var i = 1; i < table4.rows.length; i++) {
+
+            DrugQuantity.push(table4.rows[i].cells[1].innerHTML);
+            DrugPrice.push(table4.rows[i].cells[2].innerHTML);
+
+        }
+
+        var Price = new Array();
+        var table5 = document.getElementById('OtherCheck');
+        for (var i = 1; i < table5.rows.length; i++) {
+
+            Price.push(table5.rows[i].cells[1].innerHTML);
+        }
+        if (prid != '') {
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: '@Url.Action("Check", "PatientRegisterations")',
+                data: {prgcid:prgcid, pid:pid, prid: prid, checkDate: CDate, drugID: DrugId, drugQuantity: DrugQuantity, drugPrice: DrugPrice, feeID: OtherCheckId, price: Price, DoctorNote:DoctorNote, StudentId:StudentId },
+                //contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (prcid) {
+                    if (prcid != 0) {
+                        $("#patientCheckID").val(prcid);
+                        alert("New check is added/updated with check#: ( " + prcid + " )");
+                        searchByRegistration(prid);
+                    } else {
+                        alert("Just for the last Registration CHECK IS ALLOWED!");
+                    }
+                },
+                error: function (xhr) { alert("Error"); }
+
+            });
+        } else {
+            alert("Please add a new patient or select an existing patient!");
+        }
+    }
+
+    function Payment() {
+
+        if (PDate == null)
+            PDate = moment($("#paymentDate").val()).format("DD-MM-YYYY");
+
+        if (!$("#PaymentForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+        if ($("#paymentNumber").val() == '')
+            $("#paymentNumber").val(0)
+
+        var prgp = $("#paymentNumber").val();
+
+        var prid = $("#RegistrationID").val();
+        var prcid = $("#patientCheckID").val();
+        var drugFee = $("#drugFee").val();
+        var otherFee = $("#otherFee").val();
+        var Received = $("#Received").val();
+        var Description = $.trim( $("#Description").val());
+
+        if (prcid != '') {
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: '@Url.Action("Payment", "PatientRegisterations")',
+                data: { prgp: prgp, prcid: prcid, drugFee: drugFee, otherFee: otherFee, paymentDate: PDate, Recieved: Received, Description: Description },
+                //contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (prpid) {
+                    if (prpid != 0) {
+                        $("#paymentNumber").val(prpid)
+                        searchByRegistration(prid);
+                        searchByCheck(prcid);
+                        alert("New payment is added with payment#: ( " + prpid + " ) for" + " check#: ( " + prcid + " )");
+
+                        NewPayment();
+                    } else {
+                        searchByRegistration(prid);
+                        searchByCheck(prcid);
+                        alert("Payment#: ( " + prgp + " ) is successfully updated!");
+                    }
+                },
+                error: function (xhr) { alert("Error"); }
+            });
+
+
+        } else {
+            alert("Please add a new check or select an existing check!");
+        }
+    }
+
+
+    var SearchByPatient = [];
+    function searchByPatient() {
+
+        var search;
+        if (document.getElementById('id').checked)
+            search = $("#search").val();
+        else if (document.getElementById('name').checked)
+            search = $("#AutoPatientSearchID").val();
+        else
+            alert("Please select a search option")
+
+        if (search != '') {
+           // $('td:last-child(2)').hide();
+            $.ajax({
+                type: "GET",
+                async: true,
+                url: '@Url.Action("searchByPatient", "PatientRegisterations")',
+                data: { patientID: search },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    var item = $.parseJSON(data);
+
+                    if (item[0].patientRegistrationID > 0) {
+                        for (var i = 0; i < item.length; i++) {
+                            SearchByPatient[i] = {
+                                patientRegistrationID: item[i].patientRegistrationID, registerDate: moment(item[i].registerDate).format("DD-MMM-YYYY"),
+                                patientName: item[i].patientName, patientLastName: item[i].patientLastName,
+                                registrationFee: item[i].registrationFee
+                            };
+                        }
+                    }
+
+                    var table = document.getElementById('PatientDetails');
+                    var rowCount = table.rows.length;
+
+                    for (var i = rowCount - 1; i > 0; i--) {
+                        table.deleteRow(i);
+                    }
+
+                    if (item[0].patientRegistrationID > 0) {
+                        for (var i = 0; i < item.length; i++) {
+
+                            var newRow = table.insertRow(table.rows.length);
+                            var cell1 = newRow.insertCell(0);
+                            var cell2 = newRow.insertCell(1);
+                            var cell3 = newRow.insertCell(2);
+                            var cell4 = newRow.insertCell(3);
+                            var cell5 = newRow.insertCell(4);
+                            var cell6 = newRow.insertCell(5);
+
+                            cell1.innerHTML = SearchByPatient[i].patientRegistrationID;
+                            cell2.innerHTML = SearchByPatient[i].registerDate;
+                            cell3.innerHTML = SearchByPatient[i].patientName;
+                            cell4.innerHTML = SearchByPatient[i].patientLastName;
+                            cell5.innerHTML = SearchByPatient[i].registrationFee;
+                            cell6.innerHTML = "<input type='button' name='btnRemove' onclick='getRegisterIDForDelete();' value='Delete' class='btn btn-danger btn-sm p-0 pl-1 pr-1 mr-1'><input type='button' name='btnRemove' onclick='getRegisterID();' value='Details' class='btn btn-secondary btn-sm p-0 pl-1 pr-1 ml-1'>";
+
+                        }
+                    }
+                },
+                error: function (xhr) { alert("Error"); }
+            });
+
+        } else {
+            alert("There is no item to search!");
+        }
+    }
+
+    function PatientDetails(PId) {
+
+        $.ajax({
+            type: "GET",
+            async: true,
+            url: '@Url.Action("searchByPatient", "PatientRegisterations")',
+            data: { patientID: PId },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var item = $.parseJSON(data);
+
+                var table = document.getElementById('PatientDetails');
+                var rowCount = table.rows.length;
+
+                for (var i = rowCount - 1; i > 0; i--) {
+                    table.deleteRow(i);
+                }
+                if (item[i].patientRegistrationID > 0) {
+                    for (var i = 0; i < item.length; i++) {
+
+                        var newRow = table.insertRow(table.rows.length);
+                        var cell1 = newRow.insertCell(0);
+                        var cell2 = newRow.insertCell(1);
+                        var cell3 = newRow.insertCell(2);
+                        var cell4 = newRow.insertCell(3);
+                        var cell5 = newRow.insertCell(4);
+                        var cell6 = newRow.insertCell(5);
+
+                        cell1.innerHTML = item[i].patientRegistrationID;
+                        cell2.innerHTML = moment(item[i].registerDate).format("DD-MMM-YYYY");
+                        cell3.innerHTML = item[i].patientName;
+                        cell4.innerHTML = item[i].patientLastName;
+                        cell5.innerHTML = item[i].registrationFee;
+                        cell6.innerHTML = "<input type='button' name='btnRemove' onclick='getRegisterIDForDelete();' value='Delete' class='btn btn-danger btn-sm p-0 pl-1 pr-1 mr-1'><input type='button' name='btnRemove' onclick='getRegisterID();' value='Details' class='btn btn-secondary btn-sm p-0 pl-1 pr-1 ml-1'>";
+
+                    }
+                }
+            },
+            error: function (xhr) { alert("Error"); }
+        });
+    }
+
+    function DeleteRegistration(id) {
+
+        if (confirm("Are you sure you want to Delete the Registration# ( "+ id +" ) ?\nall Checks and Payments under this Registration will be REMOVED permenently!")) {
+            $.ajax({
+                type: "GET",
+                async: true,
+                url: '@Url.Action("DeleteRegistration", "PatientRegisterations")',
+                data: { RegistrationID: id },
+                //contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (pid) {
+                    var item = $.parseJSON(pid);
+                    $("#RegistrationID").val('');
+                    $("#patientCheckID").val('');
+                    PatientDetails(pid);
+                    NewCheck();
+                    NewPayment();
+
+                    var table1 = document.getElementById('SelectedSickness');
+                    var table2 = document.getElementById('Teeth');
+                    var table3 = document.getElementById('SelectedSicknessId');
+                    var table4 = document.getElementById('Sickness');
+                    var table5 = document.getElementById('SicknessId');
+                    var table6 = document.getElementById('TeethId');
+
+                    for (var i = table1.rows.length - 1; i > 0; i--) {
+                        table1.deleteRow(i);
+                    }
+
+                    for (var i = table2.rows.length-1; i >= 0; i--) {
+                        table2.deleteRow(i);
+                    }
+
+                    for (var i = table3.rows.length - 1; i > 0; i--) {
+                        table3.deleteRow(i);
+                    }
+
+                    for (var i = table4.rows.length - 1; i > 0; i--) {
+                        table4.deleteRow(i);
+                    }
+
+                    for (var i = table5.rows.length - 1; i > 0; i--) {
+                        table5.deleteRow(i);
+                    }
+
+                    for (var i = table6.rows.length - 1; i >= 0; i--) {
+                        $("#" + table6.rows[i].cells[0].innerHTML).attr('class', 'btn btn-sm btn-light p-0 pr-1 pl-1');
+                        $("#" + table6.rows[i].cells[0].innerHTML).prop("disabled", false);
+                        table6.deleteRow(i)
+                    }
+
+                    $("#RegistrationDate").val('');
+                    $("#did").val('');
+                    $("#pid").val('');
+                    $("#Age").val('');
+
+                },
+                error: function (xhr) { alert("Error"); }
+            });
+        }
+    }
+
+    function DeleteCheck(id) {
+
+        if (confirm("Are you sure you want to Delete the selected Check# ( "+ id +" ) ?\nall Payments under this Check will be REMOVED permenently!")) {
+            $.ajax({
+                type: "GET",
+                async: true,
+                url: '@Url.Action("DeleteCheck", "PatientRegisterations")',
+                data: { CheckID: id },
+                //contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (prid) {
+                    var item = $.parseJSON(prid);
+                    NewCheck();
+                    NewPayment();
+                },
+                error: function (xhr) { alert("Error"); }
+            });
+        }
+    }
+
+    function DeletePayment(id) {
+
+        if (confirm("Are you sure you want to Delete the Payment# ( "+id+" ) ?")) {
+            $.ajax({
+                type: "GET",
+                async: true,
+                url: '@Url.Action("DeletePayment", "PatientRegisterations")',
+                data: { PaymentID: id },
+                //contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (pid) {
+                    var item = $.parseJSON(pid);
+                    NewPayment();
+                },
+                error: function (xhr) { alert("Error"); }
+            });
+        }
+    }
+
+    function getRegisterID() {
+
+        var table = document.getElementById('PatientDetails'), Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[5].onclick = function () {
+                Index = this.parentElement.rowIndex;
+
+                var rowsNotSelected = table.getElementsByTagName('tr');
+
+                for (var row = 0; row < rowsNotSelected.length; row++) {
+                    rowsNotSelected[row].style.backgroundColor = "";
+                    rowsNotSelected[row].classList.remove('selected');
+                }
+
+                var rowSelected = table.getElementsByTagName('tr')[Index];
+                rowSelected.style.backgroundColor = "yellow";
+                rowSelected.className += " selected";
+
+                searchByRegistration(table.rows[Index].cells[0].innerHTML);
+            };
+        }
+
+    }
+
+    function getRegisterIDForDelete() {
+
+        var table = document.getElementById('PatientDetails'), Index;
+
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[5].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                DeleteRegistration(table.rows[Index].cells[0].innerHTML);
+            };
+        }
+    }
+
+    function getCheckID() {
+        var table = document.getElementsByTagName("table")[7], Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[4].onclick = function () {
+                Index = this.parentElement.rowIndex;
+
+                var rowsNotSelected = table.getElementsByTagName('tr');
+
+                for (var row = 0; row < rowsNotSelected.length; row++) {
+                    rowsNotSelected[row].style.backgroundColor = "";
+                    rowsNotSelected[row].classList.remove('selected');
+                }
+
+                var rowSelected = table.getElementsByTagName('tr')[Index];
+                rowSelected.style.backgroundColor = "yellow";
+                rowSelected.className += " selected";
+
+                $("#patientCheckID").val(table.rows[Index].cells[1].innerHTML);
+                searchByCheck(table.rows[Index].cells[1].innerHTML);
+            };
+        }
+    }
+
+    function getCheckIDForDelete() {
+        var table = document.getElementsByTagName("table")[7], Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[4].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                DeleteCheck(table.rows[Index].cells[1].innerHTML);
+            };
+        }
+    }
+
+    function getPaymentID() {
+        var table = document.getElementById('CheckPayments'), Index;
+        var table1 = document.getElementById('Receipt');
+
+        for (var i = table1.rows.length - 1; i > 0; i--) {
+            table1.deleteRow(i);
+        }      
+
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[7].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                //$("#RegisterID").val(table.rows[Index].cells[0].innerHTML);
+
+                var rowsNotSelected = table.getElementsByTagName('tr');
+
+                for (var row = 0; row < rowsNotSelected.length; row++) {
+                    rowsNotSelected[row].style.backgroundColor = "";
+                    rowsNotSelected[row].classList.remove('selected');
+                }
+
+                var rowSelected = table.getElementsByTagName('tr')[Index];
+                rowSelected.style.backgroundColor = "yellow";
+                rowSelected.className += " selected";
+
+                //searchByPayment(table.rows[Index].cells[1].innerHTML, table.rows[Index].cells[6].innerHTML);
+
+                 $.ajax({
+                    type: "GET",
+                    async: true,
+                    url: '@Url.Action("searchByPayment", "PatientRegisterations")',
+                    data: { PaymentID: table.rows[Index].cells[1].innerHTML },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "html",
+                    success: function (data) {
+                        var item = $.parseJSON(data);
+
+                        $("#paymentNumber").val(item.paymentID);
+                        $("#drugFee").val(item.paymentDrugFee);
+                        $("#otherFee").val(item.paymentOtherFee);
+                        $("#paymentDate").val(moment(item.paymentDate).format("MM/DD/YYYY"));
+                        $("#Received").val(item.paymentPaidAmount);
+                        $("#Net").val(table.rows[Index].cells[6].innerHTML);
+                        $("#Description").val(item.paymentDescription);
+
+                        printRegistration();
+                        var newRow = table1.insertRow(table1.rows.length);
+                        var cell1 = newRow.insertCell(0);
+                        var cell2 = newRow.insertCell(1);
+                        var cell3 = newRow.insertCell(2);
+                        var cell4 = newRow.insertCell(3);
+                        var cell5 = newRow.insertCell(4);
+
+                        cell1.innerHTML = table.rows[Index].cells[0].innerHTML;
+                        cell2.innerHTML = table.rows[Index].cells[1].innerHTML;
+                        cell3.innerHTML = table.rows[Index].cells[2].innerHTML;
+                        cell4.innerHTML = item.paymentDescription;
+                        cell5.innerHTML = table.rows[Index].cells[5].innerHTML;
+                    },
+                    error: function (xhr) { alert("Error"); }
+                 });
+
+               
+            };
+        }
+    }
+
+    function getPaymentIDForDelete() {
+        var table = document.getElementById('CheckPayments'), Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[7].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                //$("#RegisterID").val(table.rows[Index].cells[0].innerHTML);
+                DeletePayment(table.rows[Index].cells[1].innerHTML,table.rows[Index].cells[6].innerHTML);
+            };
+        }
+    }
+
+    function searchByRegistration(s) {
+
+        $("#RegistrationID").val(s);
+        $.ajax({
+            type: "GET",
+            async: true,
+            url: '@Url.Action("searchByRegistration", "PatientRegisterations")',
+            data: { RegistrationID: s },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+
+                var item = $.parseJSON(data);
+                $("#pid").val(item.patientName + " ( " + item.patientID + " )");
+                $("#did").val(item.doctorName);
+                $("#AutoPatientID").val(item.patientID);
+                $("#AutoDoctorID").val(item.doctorID);
+                $("#fee").val(item.registrationFee);
+                $("#RegistrationDate").val(moment(item.registerDate).format("MM/DD/YYYY"));
+                $("#Age").val(item.patientAge);
+
+
+                var table1 = document.getElementById('SelectedSickness');
+                var table9 = document.getElementById('SelectedSicknessId');
+                var table2 = document.getElementById('Teeth');
+                var table8 = document.getElementById('TeethId');
+                var table3 = document.getElementsByTagName("table")[7];
+                var table6 = document.getElementById('AllPayments');
+                var table7 = document.getElementById('CheckPayments');
+                var rowCount1 = table1.rows.length;
+                var rowCount2 = table2.rows.length;
+                var rowCount3 = table3.rows.length;
+                var rowCount6 = table6.rows.length;
+                var rowCount7 = table7.rows.length;
+                var rowCount8 = table8.rows.length;
+                var rowCount9 = table9.rows.length;
+
+                for (var i = rowCount1 - 1; i > 0; i--) {
+                    table1.deleteRow(i);
+                }
+
+                for (var i = rowCount9 - 1; i > 0; i--) {
+                    table9.deleteRow(i);
+                }
+
+                for (var i = rowCount2 - 1; i >= 0; i--) {
+                    table2.deleteRow(i);
+                }
+
+                for (var i = rowCount3 - 1; i > 0; i--) {
+                    table3.deleteRow(i);
+                }
+
+                for (var i = rowCount8-1; i >= 0; i--) {
+                    table8.deleteRow(i);
+                }
+
+                for (var i = rowCount6 - 1; i > 0; i--) {
+                    table6.deleteRow(i);
+                }
+
+                for (var i = rowCount7 - 1; i > 0; i--) {
+                    table7.deleteRow(i);
+                }
+
+                SelectedTreathmentId.splice(0, SelectedTreathmentId.length);
+                TreathmentId.splice(0, TreathmentId.length);
+                DrugId.splice(0, DrugId.length);
+                OtherCheckId.splice(0, OtherCheckId.length);
+
+                for (var i = 0; i < item.historyElementID.length; i++) {
+
+                    var newRow = table1.insertRow(table1.rows.length);
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+
+                    SelectedTreathmentId.push(item.historyElementID[i]);
+                    cell1.innerHTML = item.historyElementName[i];
+                    cell2.innerHTML = "<button name='btnRemove' onclick='RemoveTable1Row();' value='' class=' btn btn-defualt text-danger btn-sm p-0 pl-1 pr-1'><i class='fas fa-close'></i></button>";
+
+                }
+
+                for (var i = 0; i < item.historyElementID.length; i++) {
+
+                    var newRow = table9.insertRow(table9.rows.length);
+                    var cell1 = newRow.insertCell(0);
+
+                    cell1.innerHTML = item.historyElementID[i];
+                }
+
+
+                SearchHistoryElement(item.patientID);
+
+                for (var i = 0; i < item.teethNumberId.length; i++) {
+                    var newRow = table2.insertRow(table2.rows.length);
+                    var cell1 = newRow.insertCell(0);
+                    cell1.innerHTML = "<div class='p-2 alert-secondary m-0'><span class='mr-1 ml-1 pr-1 pl-1 bg-warning text-light'>" + item.teethNumber[i] + "</span><lable>Teeth# " + item.teethNumber[i] + "</lable><button onclick='RemoveTable2Row();' class='btn btn-sm p-0 pl-1 pr-1 float-right'><i class='fas fa-trash'></i></button><br/><lable>Notes: "+item.note[i]+"</lable></div>";
+
+                }
+
+                for (var i = 0; i < item.teethNumberId.length; i++) {
+                    var newRow = table8.insertRow(table8.rows.length);
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+                    cell1.innerHTML = item.teethNumberId[i];
+                    cell2.innerHTML = item.note[i];
+                    $("#" + item.teethNumberId[i]).attr('class', 'btn btn-sm p-0 pr-1 pl-1 alert-danger');
+                    $("#" + item.teethNumberId[i]).prop("disabled", true);
+                }
+
+
+                for (var i = 0; i < item.patientRegistrationCheckID.length; i++) {
+
+                    var newRow = table3.insertRow(table3.rows.length);
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+                    var cell3 = newRow.insertCell(2);
+                    var cell4 = newRow.insertCell(3);
+                    var cell5 = newRow.insertCell(4);
+
+                    cell1.innerHTML = moment(item.patientRegistrationCheckDate[i]).format("DD-MMM-YYYY");
+                    cell2.innerHTML = item.patientRegistrationCheckID[i];
+                    cell3.innerHTML = item.drugFeeTotal[i];
+                    cell4.innerHTML = item.otherFeesTotal[i];
+                    cell5.innerHTML = "<input type='button' name='Details' onclick='getCheckIDForDelete();' value='Delete' class='btn btn-danger mr-1 btn-sm p-0 pl-1 pr-1'><input type='button' name='Details' onclick='getCheckID();' value='Details' class='btn btn-secondary btn-sm p-0 pl-1 pr-1'>";
+                }
+
+                for (var i = 0; i < item.patientRegistrationPaymentID.length; i++) {
+
+                    var newRow = table6.insertRow(table6.rows.length);
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+                    var cell3 = newRow.insertCell(2);
+                    var cell4 = newRow.insertCell(3);
+                    var cell5 = newRow.insertCell(4);
+                    var cell6 = newRow.insertCell(5);
+
+                    cell1.innerHTML = moment(item.patientRegistrationPaymentDate[i]).format("DD-MMM-YYYY");
+                    cell2.innerHTML = item.patientRegistrationPaymentID[i];
+                    cell3.innerHTML = item.patientRegistrationPaymentCheckID[i];
+                    cell4.innerHTML = item.drugFee[i];
+                    cell5.innerHTML = item.otherFees[i];
+                    cell6.innerHTML = item.paidAmount[i];
+                }
+
+                $.each(item, function () {
+                    console.log(this);
+                });
+            },
+            error: function (xhr) { alert("Error"); }
+        });
+    }
+
+    function searchByCheck(s) {
+        $("#patientCheckID").val(s);
+        $.ajax({
+            type: "GET",
+            async: true,
+            url: '@Url.Action("searchByCheck", "PatientRegisterations")',
+            data: { CheckID: s },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var item = $.parseJSON(data);
+                $("#checkDate").val(moment(item.patientCheckDate).format("MM/DD/YYYY"));
+                $("#DoctorNote").val(item.doctornote);
+                $("#StudentName").val(item.studentname);
+                $("#StudentId").val(item.studentid);
+
+                var table4 = document.getElementById('Drug');
+                var table5 = document.getElementById('OtherCheck');
+                var table7 = document.getElementById('CheckPayments');
+                var rowCount4 = table4.rows.length;
+                var rowCount5 = table5.rows.length;
+                var rowCount7 = table7.rows.length;
+
+                for (var i = rowCount4 - 1; i > 0; i--) {
+                    table4.deleteRow(i);
+                }
+
+                for (var i = rowCount5 - 1; i > 0; i--) {
+                    table5.deleteRow(i);
+                }
+
+                for (var i = rowCount7 - 1; i > 0; i--) {
+                    table7.deleteRow(i);
+                }
+                DrugId.splice(0, DrugId.length);
+                OtherCheckId.splice(0, OtherCheckId.length);
+
+                for (var i = 0; i < item.drugID.length; i++) {
+
+                    var newRow = table4.insertRow(table4.rows.length);
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+                    var cell3 = newRow.insertCell(2);
+                    var cell4 = newRow.insertCell(3);
+                    var cell5 = newRow.insertCell(4);
+
+                    DrugId.push(item.drugID[i]);
+                    cell1.innerHTML = item.drugName[i];
+                    cell2.innerHTML = item.quantity[i];
+                    cell3.innerHTML = item.drugBasePrice[i];
+                    cell4.innerHTML = item.drugBasePrice[i] * item.quantity[i];
+                    cell5.innerHTML = "<input type='button' name='btnRemove' onclick='RemoveTable4Row();' value='Remove' class='btn btn-danger btn-sm p-0 pl-1 pr-1'>";
+                }
+
+
+                for (var i = 0; i < item.feeId.length; i++) {
+
+                    var newRow = table5.insertRow(table5.rows.length);
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+                    var cell3 = newRow.insertCell(2);
+
+                    OtherCheckId.push(item.feeId[i]);
+                    cell1.innerHTML = item.feeName[i];
+                    cell2.innerHTML = item.feeBasePrice[i];
+                    cell3.innerHTML = "<input type='button' name='btnRemove' onclick='RemoveTable5Row();' value='Remove' class='btn btn-danger btn-sm p-0 pl-1 pr-1'>";
+                }
+
+                for (var i = 0; i < item.patientRegistrationPaymentID.length; i++) {
+
+                    var totalPaid = 0;
+                    //get total of payment
+                    for (var ii = 1; ii < i+1; ii++) {
+                        totalPaid += parseInt(table7.rows[ii].cells[5].innerHTML);
+                    }
+
+                    var newRow = table7.insertRow(table7.rows.length);
+                    var cell1 = newRow.insertCell(0);
+                    var cell2 = newRow.insertCell(1);
+                    var cell3 = newRow.insertCell(2);
+                    var cell4 = newRow.insertCell(3);
+                    var cell5 = newRow.insertCell(4);
+                    var cell6 = newRow.insertCell(5);
+                    var cell7 = newRow.insertCell(6);
+                    var cell8 = newRow.insertCell(7);
+
+                    cell1.innerHTML = moment(item.patientRegistrationPaymentDate[i]).format("DD-MMM-YYYY");
+                    cell2.innerHTML = item.patientRegistrationPaymentID[i];
+                    cell3.innerHTML = item.patientRegistrationPaymentCheckID[i];
+                    cell4.innerHTML = item.drugFee[i];
+                    cell5.innerHTML = item.otherFees[i];
+                    cell6.innerHTML = item.paidAmount[i];
+                    cell7.innerHTML = (item.drugFee[i] + item.otherFees[i] - totalPaid) - item.paidAmount[i];
+                    cell8.innerHTML = "<input type='button' name='Delete' onclick='getPaymentIDForDelete();' value='Delete' class='btn btn-danger btn-sm p-0 pl-1 pr-1'> <input type='button' name='Details' onclick='getPaymentID();' value='Details' class='btn btn-secondary btn-sm p-0 pl-1 pr-1'> <input type='button' name='Print' href='#' onclick='getPaymentID();' data-toggle='modal' data-target='#PatientReceipt' value='Print' class='btn btn-secondary btn-sm p-0 pl-1 pr-1'>";
+                }
+
+                drugTotal = 0;
+                for (var i = 1; i < table4.rows.length; i++) {
+                    drugTotal += parseInt(table4.rows[i].cells[3].innerHTML);
+                }
+                $("#drugFee").val(drugTotal);
+
+                otherTotal = 0;
+                for (var i = 1; i < table5.rows.length; i++) {
+                    otherTotal += parseInt(table5.rows[i].cells[1].innerHTML);
+                }
+                $("#otherFee").val(otherTotal);
+                $("#TotalFees").val(drugTotal + otherTotal);
+
+            },
+            error: function (xhr) { alert("Error"); }
+        });
+    }
+
+    function searchByPayment(s, d) {
+
+        $.ajax({
+            type: "GET",
+            async: true,
+            url: '@Url.Action("searchByPayment", "PatientRegisterations")',
+            data: { PaymentID: s },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var item = $.parseJSON(data);
+
+                $("#paymentNumber").val(item.paymentID);
+                $("#drugFee").val(item.paymentDrugFee);
+                $("#otherFee").val(item.paymentOtherFee);
+                $("#paymentDate").val(moment(item.paymentDate).format("MM/DD/YYYY"));
+                $("#Received").val(item.paymentPaidAmount);
+                $("#Net").val(d);
+                $("#Description").val(item.paymentDescription);
+            },
+            error: function (xhr) { alert("Error"); }
+        });
+    }
+
+    function AddTable1Row() {
+        var sicknessID = $("#AutoSicknessID").val();
+        var sicknessName = $("#AutoSicknessName").val();
+        var table = document.getElementById('SelectedSickness');
+
+        if ($("#sickness").val() != '') {
+            var b = 1;
+            for (var i = 1; i < table.rows.length; i++) {
+                if (table.rows[i].cells[0].innerHTML == $("#AutoSicknessID").val())
+                    b = 0;
+            }
+
+            if (b) {
+                var newRow = table.insertRow(table.rows.length);
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+
+                cell1.innerHTML = sicknessID;
+                cell2.innerHTML = sicknessName;
+                cell3.innerHTML = "<input type='button' name='btnRemove' onclick='RemoveTable1Row();' value='Remove' class='btn btn-danger btn-sm p-0 pl-1 pr-1'>";
+                $("#AutoSicknessID").val('');
+                $("#sickness").val('')
+            } else
+                alert("Duplicated entry found!");
+        }
+        else
+        {
+            alert("Please select an item!");
+        }
+    }
+
+    //$("#Sikness").keyup(function(event) {
+    //    if (event.keyCode === 13) {
+    //        AddTable1Row();
+    //    }
+    //});
+
+    function RemoveTable1Row() {
+        var table1 = document.getElementById('Sickness'), Index;
+        var table2 = document.getElementById('SelectedSickness');
+        var table3 = document.getElementById('SicknessId');
+        var table4 = document.getElementById('SelectedSicknessId');
+
+        for (var i = 1; i < table2.rows.length; i++) {
+            table2.rows[i].cells[1].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                TreathmentId.push(SelectedTreathmentId[Index - 1]);
+                SelectedTreathmentId.splice(Index - 1, 1);
+
+                var newRow = table1.insertRow(table1.rows.length);
+                var newRow1 = table3.insertRow(table3.rows.length);
+                var cell0 = newRow1.insertCell(0);
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+
+
+                cell0.innerHTML = table4.rows[Index].cells[0].innerText;
+                cell1.innerHTML = table2.rows[Index].cells[0].innerText;
+                cell2.innerHTML = "<button name='btnRemove' onclick='RemoveHistoryElement();' value='' class=' btn btn-defualt text-success btn-sm p-0 pl-1 pr-1'><i class='fas fa-plus'></i></button>";
+
+                table2.deleteRow(Index);
+                table4.deleteRow(Index);
+            };
+        }
+    }
+
+    var TeethNumber;
+    var TeethId;
+    function SelectTeeth(id) {
+        $(id).add(function () {
+            TeethNumber = $(id).text();
+            TeethId = $(id).val();
+        });
+    }
+
+    function AddTable2Row() {
+        if (TeethId != null) {
+            var table = document.getElementById('Teeth');
+            var newRow = table.insertRow(table.rows.length);
+            var cell0 = newRow.insertCell(0);
+
+            var table1 = document.getElementById('TeethId');
+            var newRow1 = table1.insertRow(table1.rows.length);
+            var cell1 = newRow1.insertCell(0);
+            var cell2 = newRow1.insertCell(1);
+            //$(TeethTagId).css("background-color", "yellow");
+            $("#" + TeethId).attr('class','btn btn-sm p-0 pr-1 pl-1 alert-danger');
+            $("#" + TeethId).prop("disabled", true);
+            cell0.innerHTML = "<div class='p-2 alert-secondary m-0'><span class='mr-1 ml-1 pr-1 pl-1 bg-warning text-light'>" + TeethNumber + "</span><lable>Teeth# " + TeethNumber + "</lable><button onclick='RemoveTable2Row();' class='btn btn-sm p-0 pl-1 pr-1 float-right'><i class='fas fa-trash'></i></button><br/><lable>Notes: "+$("#note").val()+"</lable></div>";
+            cell1.innerHTML = TeethId;
+            cell2.innerHTML = $("#note").val();
+        } else {
+            alert("Please select a Tooth!");
+        }
+
+        TeethNumber = null;
+        TeethId = null;
+    }
+
+    function RemoveTable2Row() {
+        var table1 = document.getElementById('TeethId');
+        var table = document.getElementById('Teeth'), Index;
+        for (var i = 0; i < table.rows.length; i++) {
+            table.rows[i].cells[0].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                $("#"+table1.rows[Index].cells[0].innerHTML).attr('class', 'btn btn-sm btn-light p-0 pr-1 pl-1');
+                $("#"+table1.rows[Index].cells[0].innerHTML).prop("disabled", false);
+                table.deleteRow(Index);
+                table1.deleteRow(Index);
+            };
+        }
+    }
+
+    function AddTable4Row() {
+        var drugID = $('#AutoDrugID').val();
+        var drugName = $('#AutoDrugName').val();
+        var drugPrice=$('#AutoDrugPrice').val();
+        var quantity = $('#quantity').val();
+
+        var table = document.getElementById('Drug');
+
+        var b = 1;
+        for (var i = 0; i < DrugId.length; i++) {
+            if (DrugId[i] == $("#AutoDrugID").val())
+                    b = 0;
+        }
+
+        if ($("#AutoDrugID").val() == '') {
+            alert("Please select a value for drug type and drug.");
+        }else if ($("#quantity").val() < '1') {
+            alert("Drug quantity should not be less than 1.");
+        } else
+        {
+            if (b) {
+                var newRow = table.insertRow(table.rows.length);
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+
+                DrugId.push(drugID);
+                cell1.innerHTML = drugName;
+                cell2.innerHTML = quantity;
+                cell3.innerHTML = drugPrice;
+                cell4.innerHTML = drugPrice * quantity;
+                cell5.innerHTML = "<input type='button' name='btnRemove' onclick='RemoveTable4Row();' value='Remove' class='btn btn-danger btn-sm p-0 pl-1 pr-1'>";
+
+                $('#drugTypeID').val('');
+                $('#AutoDrugTypeID').val('');
+                $('#drugID').val('');
+                $('#AutoDrugID').val('');
+                $('#quantity').val('');
+
+                drugTotal = 0;
+                var table4 = document.getElementById('Drug');
+                for (var i = 1; i < table4.rows.length; i++) {
+                    drugTotal += parseInt(table4.rows[i].cells[3].innerHTML);
+                }
+                $("#drugFee").val(drugTotal);
+            } else {
+                alert("Duplicated entry found!");
+            }
+        }
+    }
+
+    function RemoveTable4Row() {
+        var table = document.getElementById('Drug'), Index;
+        var drugTotal = $("#drugFee").val();
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[4].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                DrugId.splice(Index - 1, 1);
+                $("#drugFee").val(drugTotal - parseInt(table.rows[Index].cells[4].innerHTML));
+                table.deleteRow(Index);
+            };
+        }
+    }
+
+    function AddTable5Row() {
+        var FeeElementID = $('#AutoFeeElementID').val();
+        var FeeElementName = $('#FeeElementID').val();
+        var FeeElementPrice = $('#AutoFeeElementPrice').val();
+        var price = $('#FeePrice').val();
+
+        var table = document.getElementById('OtherCheck');
+
+         var b = 1;
+        for (var i = 0; i < OtherCheckId.length; i++) {
+                if (OtherCheckId[i] == $("#AutoFeeElementID").val())
+                    b = 0;
+        }
+
+        if ($("#AutoFeeElementID").val() != '' && $('#FeeElementID').val() != '') {
+            if (b) {
+                var newRow = table.insertRow(table.rows.length);
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+
+                OtherCheckId.push(FeeElementID);
+                cell1.innerHTML = FeeElementName;
+                cell2.innerHTML = FeeElementPrice;
+                cell3.innerHTML = "<input type='button' name='btnRemove' onclick='RemoveTable5Row();' value='Remove' class='btn btn-danger btn-sm p-0 pl-1 pr-1'>";
+
+                $('#FeeTypeID').val('');
+                $('#AutoFeeTypeID').val('');
+                $('#AutoFeeElementID').val('');
+                $('#FeeElementID').val('');
+
+                otherTotal = 0;
+                var table5 = document.getElementById('OtherCheck');
+                for (var i = 1; i < table5.rows.length; i++) {
+                    otherTotal += parseInt(table5.rows[i].cells[1].innerHTML);
+                }
+                $("#otherFee").val(otherTotal);
+            } else {
+                alert("Duplicated entry found!");
+            }
+        }
+        else
+        {
+            alert("Please select an item!");
+        }
+    }
+
+    function RemoveTable5Row() {
+        var table = document.getElementById('OtherCheck'), Index;
+        var otherTotal = $("#otherFee").val();
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[2].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                OtherCheckId.splice(Index - 1, 1);
+                $("#otherFee").val(otherTotal - parseInt(table.rows[Index].cells[2].innerHTML));
+                table.deleteRow(Index);
+            };
+        }
+    }
+
+    function calculate() {
+
+        if ($("#drugFee").val() == '')
+            $("#drugFee").val(0);
+
+        if ($("#otherFee").val() == '')
+            $("#otherFee").val(0);
+
+        if ($("#Received").val() == '')
+            $("#Received").val(0);
+
+        var table7 = document.getElementById('CheckPayments');
+        var drugFee = parseInt($("#drugFee").val());
+        var otherFee = parseInt($("#otherFee").val());
+        var Received = parseInt($("#Received").val());
+        var payment = 0;
+        for (var i = 1; i < table7.rows.length; i++) {
+            payment += parseInt(table7.rows[i].cells[5].innerHTML);
+        }
+        $("#Net").val(( drugFee + otherFee) - (Received + payment));
+    }
+
+    $("#search").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoPatientSearchID').val('0');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompletePatientSearch", "PatientRegisterations")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus: true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoPatientSearchID").val(ui.item.id);
+            //Tags for display
+            this.value = ui.item.label;
+
+            return false;
+        },
+
+        close: function (event, ui) { }
+    });
+
+    $("#did").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoDoctorID').val('0');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteDoctorSelect", "PatientRegisterations")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus:true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoDoctorID").val(ui.item.id);
+            //Tags for display
+            this.value = ui.item.label;
+
+            return false;
+        },
+        close: function (event, ui) { setDoctor(); }
+    });
+
+    function setDoctor() {
+        if ($("#AutoDoctorID").val() != 0) {
+
+            // $("#divLoading").show();
+
+
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("getDoctor", "PatientRegisterations")',
+                //dataType: 'json',
+                data: { did: $('#AutoDoctorID').val() },
+                success: function (data) {
+                    // $('#divPartialStudentList').html(data);
+                    //  $("#divLoading").hide();
+                },
+                error: function (ex) {
+                    //$("#divLoading").hide();
+                    alert('Failed to get Subject Detail' + ex);
+                }
+            });
+            return false;
+
+        }
+
+    }
+
+    $("#drugID").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoDrugID').val('0');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteDrugSelect", "PatientRegisterations")',
+                { term: request.term,DrugType:$("#drugType").val() },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus: true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoDrugID").val(ui.item.id);
+            $("#AutoDrugName").val(ui.item.label);
+            $("#AutoDrugPrice").val(ui.item.price);
+            //Tags for display
+            this.value = ui.item.label;
+
+            return false;
+        },
+        close: function (event, ui) { }
+    });
+
+    $("#FeeElementID").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoFeeElementID').val('0');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteFeeElementSelect", "PatientRegisterations")',
+                { term: request.term,ftID: $("#feeType").val() },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus: true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoFeeElementID").val(ui.item.id);
+            $("#AutoFeeElementPrice").val(ui.item.fee);
+            //Tags for display
+            this.value = ui.item.label;
+
+            return false;
+        },
+        close: function (event, ui) { }
+    });
+
+
+    function SearchHistoryElement(pid) {
+        if ($("#AutoPatientID").val() != 0) {
+
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: '@Url.Action("SearchHistoryElement", "PatientRegisterations")',
+                data: { pid: pid },
+                //contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    var item = $.parseJSON(data);
+                    var table1 = document.getElementById('Sickness');
+                    var table2 = document.getElementById('SicknessId');
+                    var table3 = document.getElementById('SelectedSicknessId');
+                    var rowCount1 = table1.rows.length;
+                    var rowCount2 = table2.rows.length;
+
+                    for (var i = rowCount1 - 1; i > 0; i--) {
+                        table1.deleteRow(i);
+                    }
+
+                    for (var i = rowCount2 - 1; i > 0; i--) {
+                        table2.deleteRow(i);
+                    }
+
+                    var b = 1;
+
+                    for (var i = 0; i < item.length; i++) {
+
+                        for (var ii = 1; ii < table3.rows.length; ii++) {
+                           // alert(item[i].historyElementId + " = " + table3.rows[ii].cells[0].innerHTML);
+                            if (item[i].historyElementId == table3.rows[ii].cells[0].innerHTML) {
+                                b = 0;
+                                ii = table3.rows.length; // to stop the loop if condition is true
+                            } else {
+                                b = 1;
+                            }
+                        }
+
+                        //alert("b= "+b);
+                        if (b) {
+                            TreathmentId.push(item[i].historyElementId);
+                            var newRow = table1.insertRow(table1.rows.length);
+                            var newRow2 = table2.insertRow(table2.rows.length);
+                            var cell0 = newRow2.insertCell(0);
+
+                            var cell1 = newRow.insertCell(0);
+                            var cell2 = newRow.insertCell(1);
+
+                            cell0.innerHTML = item[i].historyElementId;
+                            cell1.innerHTML = item[i].name;
+                            cell2.innerHTML = "<button name='btnRemove' onclick='RemoveHistoryElement();' value='' class=' btn btn-defualt text-success btn-sm p-0 pl-1 pr-1'><i class='fas fa-plus'></i></button>";
+                        }
+                    }
+                },
+                error: function (xhr) { alert("Error"); }
+            });
+        }
+    }
+
+    function RemoveHistoryElement() {
+        var table1 = document.getElementById('Sickness'), Index;
+        var table2 = document.getElementById('SelectedSickness');
+        var table3 = document.getElementById('SicknessId');
+        var table4 = document.getElementById('SelectedSicknessId');
+
+        for (var i = 1; i < table1.rows.length; i++) {
+            table1.rows[i].cells[1].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                SelectedTreathmentId.push(TreathmentId[Index - 1]);
+                //alert(TreathmentId[Index - 1]);
+                TreathmentId.splice(Index - 1, 1);
+
+                var newRow = table2.insertRow(table2.rows.length);
+                var newRow1 = table4.insertRow(table4.rows.length);
+
+                var cell0 = newRow1.insertCell(0);
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+
+                cell0.innerHTML = table3.rows[Index].cells[0].innerText;
+                cell1.innerHTML = table1.rows[Index].cells[0].innerText;
+                cell2.innerHTML = "<button name='btnRemove' onclick='RemoveTable1Row();' value='' class=' btn btn-defualt text-danger btn-sm p-0 pl-1 pr-1'><i class='fas fa-close'></i></button>";
+
+                table1.deleteRow(Index);
+                table3.deleteRow(Index);
+            };
+        }
+    }
+
+
+    $("#pid").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoPatientID').val('');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompletePatientSelect", "PatientRegisterations")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus:true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoPatientID").val(ui.item.id);
+            $("#sickness").val('');
+
+            var BirthDate = moment(ui.item.dob);
+            var RegisterDate = moment($("#RegistrationDate").val());
+            var diffDays = RegisterDate.diff(BirthDate, 'years');
+            $("#Age").val(diffDays);
+
+            //Tags for display
+            this.value = ui.item.label;
+
+            SearchHistoryElement($("#AutoPatientID").val())
+
+            return false;
+        },
+        close: function (event, ui) { setPatient(); }
+    });
+
+    function setPatient() {
+        if ($("#AutoPatientID").val() != 0) {
+
+            // $("#divLoading").show();
+
+
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("getPatient", "PatientRegisterations")',
+                //dataType: 'json',
+                data: { pid: $('#AutoPatientID').val() },
+                success: function (data) {
+
+                    // $('#divPartialStudentList').html(data);
+                    //  $("#divLoading").hide();
+                },
+                error: function (ex) {
+                    //$("#divLoading").hide();
+                    //alert('Failed to get Subject Detail' + ex);
+                }
+            });
+            return false;
+
+        }
+
+    }
+
+    $("#sickness").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoSicknessID').val('0');
+            $('#AutoSicknessName').val('nll');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteSicknessSelect", "PatientRegisterations")',
+                { term: request.term,pid: $('#AutoPatientID').val() },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus: true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoSicknessID").val(ui.item.id);
+            $("#AutoSicknessName").val(ui.item.label);
+            //Tags for display
+            this.value = ui.item.label;
+            return false;
+        },
+        close: function (event, ui) { }
+    });
+
+
+    $("#teeth").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoTeethID').val('0');
+            $('#AutoTeethNumber').val('null');
+            $('#AutoTeethLeftorRight').val('null');
+            $('#AutoTeethToporButtom').val('null');
+            $('#AutoTeethAduorChd').val('null');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteTeethSelect", "PatientRegisterations")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus: true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoTeethID").val(ui.item.id);
+            $('#AutoTeethNumber').val(ui.item.number);
+            $('#AutoTeethLeftorRight').val(ui.item.label);
+            $('#AutoTeethToporButtom').val(ui.item.topOrButtom);
+            $('#AutoTeethAduorChd').val(ui.item.aduOrChd);
+            //Tags for display
+            this.value = ui.item.label;
+            return false;
+        },
+        close: function (event, ui) { }
+    });
+
+    $('#RegistrationDate').daterangepicker({
+        singleDatePicker: true,
+        startDate: moment().subtract(0, 'days'),
+    }, function (start, end, label) {
+        RDate = (moment(start).format("DD-MM-YYYY"));
+    });
+
+    function printRegistration() {
+
+        $('#Appointment').text($('#RegistrationID').val());
+        $('#regDate').text($('#RegistrationDate').val());
+        $('#pName').text($('#pid').val());
+        $('#doctor').text($('#did').val());
+        $('#pAge').text($('#Age').val()+' Years old');
+        $('#regFee').text($('#fee').val() + ' AFN');
+
+        $('#Appointment1').text($('#RegistrationID').val());
+        $('#regDate1').text($('#RegistrationDate').val());
+        $('#pName1').text($('#pid').val());
+        $('#doctor1').text($('#did').val());
+        $('#pAge1').text($('#Age').val()+' Years old');
+    }
+
+    function print(content) {
+        $(content).printThis({
+            debug: false,               // show the iframe for debugging
+            importCSS: true,            // import parent page css
+            importStyle: false,         // import style tags
+            printContainer: true,       // print outer container/$.selector
+            loadCSS: "",                // path to additional css file - use an array [] for multiple
+            pageTitle: "",              // add title to print page
+            removeInline: false,        // remove inline styles from print elements
+            removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
+            printDelay: 333,            // variable print delay
+            header: null,               // prefix to html
+            footer: null,               // postfix to html
+            base: false,                // preserve the BASE tag or accept a string for the URL
+            formValues: true,           // preserve input/form values
+            canvas: false,              // copy canvas content
+            doctypeString: '...',       // enter a different doctype for older markup
+            removeScripts: false,       // remove script tags from print content
+            copyTagClasses: false,      // copy classes from the html & body tag
+            beforePrintEvent: null,     // function for printEvent in iframe
+            beforePrint: null,          // function called before iframe is filled
+            afterPrint: null            // function called before iframe is removed
+        });
+    }
+
+
+            </script>
+        }
+    </body>
+

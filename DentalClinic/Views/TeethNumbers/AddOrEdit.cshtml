@@ -1,0 +1,89 @@
+﻿@model DentalClinic.Models.TeethNumber
+
+
+<form id="TeethNumberForm" name="TeethNumberForm">
+    <div class="card">
+        <div class="card-header">
+            New Teeth
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="TeethNumberId" id="TeethNumberId" />
+                <div class="form-group col col-12">
+                    <label asp-for="Number" class="control-label"></label>
+                    <input asp-for="Number" class="form-control" id="number" />
+                    <span asp-validation-for="Number" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-12">
+                    <label asp-for="LeftOrRight" class="control-label"></label>
+                    <select asp-for="LeftOrRight" class="form-control" id="LeftOrRight">
+                        <option value="Left">Left</option>
+                        <option value="Right">Right</option>
+                    </select>
+                    <span asp-validation-for="LeftOrRight" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-12">
+                    <label asp-for="TopOrButtom" class="control-label"></label>
+                    <select asp-for="TopOrButtom" class="form-control" id="TopOrButtom">
+                        <option value="Upper">Upper</option>
+                        <option value="Lower">Lower</option>
+                    </select>
+                    <span asp-validation-for="TopOrButtom" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-12">
+                    <label asp-for="AduOrChd" class="control-label"></label>
+                    <select asp-for="AduOrChd" class="form-control" id="AduOrChd">
+                        <option value="Adult">Adult</option>
+                        <option value="Child">Child</option>
+                    </select>
+                    <span asp-validation-for="AduOrChd" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row col col-6 float-right">
+                <div class="col col-6 p-1">
+                    <input type="button" class="btn btn-primary btn-sm btn-block" value="Save" onclick="AddOrEditTeethNumber();" />
+                </div>
+                <div class="col col-6 p-1">
+                    <button class="btn btn-secondary btn-sm btn-block" data-dismiss="modal"> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+<script>
+    function AddOrEditTeethNumber() {
+
+        if (!$("#TeethNumberForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+        var number = $("#number").val();
+        var LeftOrRight = $("#LeftOrRight").val();
+        var TopOrButtom = $("#TopOrButtom").val();
+        var AduOrChd = $("#AduOrChd").val();
+        var id = $("#TeethNumberId").val();
+        $.ajax({
+            type: "POST",
+            async:true,
+            url: '@Url.Action("AddOrEdit", "TeethNumbers")',
+            data: { id:id,number: number, LeftOrRight:LeftOrRight,TopOrButtom:TopOrButtom,AduOrChd:AduOrChd},
+            //contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                location.href='/TeethNumbers/Index';
+            },
+            error: function (xhr) { alert("Error"); }
+
+        });
+    }
+</script>
+
+

@@ -1,0 +1,337 @@
+﻿@inject SignInManager<IdentityUser> signInManager
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    @*showing the list for auto complete text box*@
+    <link href="~/lib/bootstrap/css/site.css" rel="stylesheet" />
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/jquery/jquery-ui.js"></script>
+    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="~/lib/bootstrap/css/fontawesome-all.css" rel="stylesheet" />*@
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" media="all" />
+    <link href="~/lib/bootstrap/css/fonts.css" rel="stylesheet" />
+    <link href="~/lib/Dashboard/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
+    <link href="~/lib/Dashboard/css/sb-admin.css" rel="stylesheet" />
+    <link href="~/lib/DataTables/DataTables-1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" media="all" />
+    <link href="~/lib/DataTables/Buttons-1.6.1/css/buttons.bootstrap4.min.css" rel="stylesheet" media="all" />
+    <link href="~/lib/bootstrap/css/Ccss.css" rel="stylesheet" />
+    <script src="~/lib/DataTables/printThis.js"></script>
+    <script src="~/lib/DataTables/moment.js"></script>
+    <script src="~/lib/DateRangePicker/daterangepicker.js"></script>
+    <link href="~/lib/DateRangePicker/daterangepicker.css" rel="stylesheet" />
+    <link href="~/lib/select2-4.1.0-beta.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="~/lib/select2-4.1.0-beta.0/dist/js/select2.min.js"></script>
+
+    <title>Dental Clinic</title>
+</head>
+
+<body id="page-top">
+    @if (signInManager.IsSignedIn(User))
+    {
+    <div id="wrapper">
+        
+        <!-- Sidebar -->
+
+        <ol class="sidebar navbar-nav bg-info" style="transition:0.3s; position:relative; height:inherit;">
+            <li class="nav-item active">
+                <a class="nav-link" asp-action="Index" asp-controller="Dashboard">
+                    <div class="text-center">
+                        <img src="~/lib/images/GhalibLogo.png" class="img-fluid rounded-circle d-b m-auto shadow-lg" width="100" />
+                    </div>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown" style="transition:0.3s;">
+                <a onclick="menu1();" class="text-light nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-tasks"></i>
+                    <span>Tasks</span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="pagesDropdown" id="task">
+                    <a id="patientregistration" asp-action="AddOrEdit" asp-controller="PatientRegisterations" class="dropdown-item" onclick="task(); NewRegister();">Patient Registeration</a>
+                    <a id="student" asp-action="Index" asp-controller="StudentViewModel" class="dropdown-item" onclick="task();">New Student</a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown" style="transition:0.3s;">
+                <a onclick="menu2();" class="text-light nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-fw fa-anchor"></i>
+                    <span>Maintain</span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="pagesDropdown" id="maintain">
+                    <h6 class="dropdown-header">Stager:</h6>
+                    @*<a asp-action="Register" asp-controller="Account" class="dropdown-item">User Registration</a>*@
+                    <a onclick="maintain();" asp-action="Index" asp-controller="StudentGroups" class="dropdown-item">Add Group</a>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="Semester" class="dropdown-item">Add Semester</a>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="Sessions" class="dropdown-item">Add Session</a>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="Subjects" class="dropdown-item">Add Subject</a>
+                    <div class="dropdown-divider"></div>
+                    <h6 class="dropdown-header">Patient:</h6>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="Patients" class="dropdown-item">Add Patient</a>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="Doctors" class="dropdown-item" target="_top">Add Doctor</a>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="Companies" class="dropdown-item">Add Company</a>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="DrugElements" class="dropdown-item">Add Drug</a>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="DrugTypes" class="dropdown-item">New Drug Type</a>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="FeeElements" class="dropdown-item">Add Service</a>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="FeeTypes" class="dropdown-item">New Service Type</a>
+                    <a onclick="maintain();" asp-action="Index" asp-controller="HistoryElements" class="dropdown-item">New Disease</a>
+                    @*<a asp-action="Index" asp-controller="TeethNumbers" class="dropdown-item">New Tooth</a>*@
+                </div>
+            </li>
+
+            <li class="nav-item dropdown" style="transition:0.3s;">
+                <a onclick="menu3();" class="text-light nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-files-o"></i>
+                    <span>Reports</span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="pagesDropdown" id="report">
+                    <a onclick="report();" asp-action="Index" asp-controller="PatientReport" class="dropdown-item">Patient Report</a>
+                    <a onclick="report();" asp-action="Index" asp-controller="StagerReport" class="dropdown-item">Stager Report</a>
+                </div>
+            </li>
+            <li class="text-light nav-item">
+                <a onclick="menu4();" class="nav-link" asp-action="Index" asp-controller="Settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ol>
+       
+
+
+        <div id="content-wrapper" class="pt-0">
+
+            <nav class="mb-3 navbar navbar-expand navbar-light bg-light static-top">
+
+
+                <button class="btn btn-link btn-sm text-info order-1 order-sm-0" id="sidebarToggle" href="#">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a class="navbar-brand mr-1" asp-action="Index" asp-controller="Dashboard"> Ghalib Dental Clinic</a>
+
+                <!-- Navbar Search -->
+                <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+                    <div class="input-group">
+                        @*<input type="text" class="form-control" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>*@
+                    </div>
+                </form>
+
+                <!-- Navbar -->
+                <ul class="navbar-nav ml-auto ml-md-0 ">
+                    @*<li class="nav-item dropdown no-arrow mx-1">
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell fa-fw"></i>
+                            <span class="badge badge-danger"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="alertsDropdown">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </li>*@
+                    @*<li class="nav-item dropdown no-arrow mx-1">
+                    <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-envelope fa-fw"></i>
+                        <span class="badge badge-danger"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="messagesDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>*@
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-user-circle fa-fw"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                            <p class="dropdown-item"> @User.Identity.Name</p>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Settings"><i class="fas fa-cog"></i> Settings</a>
+                            @*<a class="dropdown-item" href="#"><i class="fas fa-tasks"></i> Activity Log</a>*@
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal"><i class="fas fa-power-off"></i> Logout</a>
+                        </div>
+                    </li>
+                </ul>
+
+            </nav>
+
+            <div class="container-fluid">
+
+                <!-- Breadcrumbs-->
+                <ol class="breadcrumb">
+
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index" asp-controller="Dashboard">Dashboard</a>
+                    </li>
+                    @*<li class="breadcrumb-item active">Overview</li>*@
+                </ol>
+
+                <div class="mb-3">
+                    @RenderBody()
+                    @RenderSection("Scripts", required: false)
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+            <!-- Sticky Footer -->
+            <footer class="sticky-footer" style="transition:0.3s;">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Ghalib Dental Clinic 2020</span>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+        <!-- /.content-wrapper -->
+
+    </div>
+        <!-- /#wrapper -->
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Are you sure you want to Logout?</div>
+                    <div class="modal-footer">
+                        <form method="post" asp-action="Logout" asp-controller="Account">
+                            <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-primary btn-sm" type="submit">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <script src="~/lib/Dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/Dashboard/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="~/lib/Dashboard/js/sb-admin.min.js"></script>
+    @*<script src="~/lib/Dashboard/vendor/chart.js/Chart.min.js"></script>
+    <script src="~/lib/Dashboard/js/demo/chart-area-demo.js"></script>*@
+    <script src="~/lib/DataTables/DataTables-1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/DataTables/DataTables-1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/lib/DataTables/Buttons-1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="~/lib/DataTables/Buttons-1.6.1/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/lib/DataTables/JSZip-2.5.0/jszip.min.js"></script>
+    <script src="~/lib/DataTables/pdfmake-0.1.36/pdfmake.min.js"></script>
+    <script src="~/lib/DataTables/pdfmake-0.1.36/vfs_fonts.js"></script>
+    <script src="~/lib/DataTables/Buttons-1.6.1/js/buttons.html5.min.js"></script>
+    <script src="~/lib/DataTables/Buttons-1.6.1/js/buttons.print.min.js"></script>
+    <script src="~/lib/DataTables/Buttons-1.6.1/js/buttons.colVis.min.js"></script>
+
+</body>
+
+</html>
+
+<script>
+    localStorage.name = "task";
+    localStorage.name = "maintain";
+    localStorage.name = "report";
+
+    var task = document.getElementById("task");
+    var maintain = document.getElementById("maintain");
+    var report = document.getElementById("report");
+
+    function menu1() {
+        if (localStorage.getItem("task") == "0") {
+            localStorage.setItem("task", "1");
+            task.style.display = "none";
+        } else if(localStorage.getItem("task") == "1") {
+            localStorage.setItem("task", "0");
+            task.style.display = "block";
+            localStorage.setItem("maintain", "1");
+            maintain.style.display = "none";
+            localStorage.setItem("report", "1");
+            report.style.display = "none";
+        }
+    }
+
+    function menu2() {
+        if (localStorage.getItem("maintain") == "0") {
+            localStorage.setItem("maintain", "1");
+            maintain.style.display = "none";
+        } else if(localStorage.getItem("maintain") == "1") {
+            localStorage.setItem("maintain", "0");
+            maintain.style.display = "block";
+            localStorage.setItem("task", "1");
+            task.style.display = "none";
+            localStorage.setItem("report", "1");
+            report.style.display = "none";
+        }
+    }
+
+    function menu3() {
+        if (localStorage.getItem("report") == "0") {
+            localStorage.setItem("report", "1");
+            report.style.display = "none";
+        } else if(localStorage.getItem("report") == "1") {
+            localStorage.setItem("report", "0");
+            report.style.display = "block";
+            localStorage.setItem("task", "1");
+            task.style.display = "none";
+            localStorage.setItem("maintain", "1");
+            maintain.style.display = "none";
+        }
+    }
+
+    function menu4() {
+        localStorage.setItem("report", "1");
+        report.style.display = "none";
+        localStorage.setItem("task", "1");
+        task.style.display = "none";
+        localStorage.setItem("maintain", "1");
+        maintain.style.display = "none";
+    }
+
+    function task() {
+        localStorage.setItem("task", "0");
+    }
+
+    function maintain() {
+        localStorage.setItem("maintain", "0");
+    }
+
+    function report() {
+        localStorage.setItem("report", "0");
+    }
+
+    if (localStorage.getItem("task") == "0") {
+        task.style.display = "block";
+    }
+
+    if (localStorage.getItem("maintain") == "0") {
+        maintain.style.display = "block";
+    }
+
+    if (localStorage.getItem("report") == "0") {
+        report.style.display = "block";
+    }
+
+</script>

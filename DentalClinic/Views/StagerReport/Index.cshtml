@@ -1,0 +1,225 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-xl-3 col-sm-3 p-0 ">
+                <div class="form-group">
+                    <input class="form-control" type="text" id="DateRange" />
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="Stager" placeholder="Search Stager" />
+                </div>
+                    <button class="btn btn-primary btn-sm" onclick="StagerReport();">Submit</button>
+                </div>
+                <div class="col col-9 p-0 pl-1">
+                    <a href="#" class="mr-2 float-right" onclick="print('#PrintIt');"><i class="fas fa-print"></i></a>
+                </div>
+            </div>
+    </div>
+    <div id="PrintIt">
+        <div class="text-center">
+            <img src="~/lib/images/GhalibLogo.png" width="10%" class="img-fluid rounded-circle shadow-sm" />
+            <h2 class="font-weight-light">Ghalib Dental Clinic</h2>
+            <h5 class="font-weight-normal">Stager Report</h5>
+            <div class="text-left">
+                <h6 class="ml-4 font-weight-normal" id="StagerName"></h6>
+            </div>
+            <div>
+                <h6 class="float-left ml-4 font-weight-normal" id="Now"></h6>
+                <h6 class="float-right mr-4 font-weight-normal" id="Range"></h6>
+            </div>
+        </div>
+        <div class="card-body pb-0">
+            <table class="table table-bordered table-hover" id="table" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Check#</th>
+                        <th>Patient Name</th>
+                        <th>Notes</th>
+                        <th>Paid Amount</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col col-10"><label class="float-right">Total Paid:</label></div>
+                <div class="col col-2 ">
+                    <label class="float-right btn-block text-center" id="Total"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+     function print(content) {
+                $(content).printThis({
+                    debug: false,               // show the iframe for debugging
+                    importCSS: true,            // import parent page css
+                    importStyle: false,         // import style tags
+                    printContainer: true,       // print outer container/$.selector
+                    loadCSS: "",                // path to additional css file - use an array [] for multiple
+                    pageTitle: "",              // add title to print page
+                    removeInline: false,        // remove inline styles from print elements
+                    removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
+                    printDelay: 333,            // variable print delay
+                    header: null,               // prefix to html
+                    footer: null,               // postfix to html
+                    base: false,                // preserve the BASE tag or accept a string for the URL
+                    formValues: true,           // preserve input/form values
+                    canvas: false,              // copy canvas content
+                    doctypeString: '',       // enter a different doctype for older markup
+                    removeScripts: false,       // remove script tags from print content
+                    copyTagClasses: false,      // copy classes from the html & body tag
+                    beforePrintEvent: null,     // function for printEvent in iframe
+                    beforePrint: null,          // function called before iframe is filled
+                    afterPrint: null            // function called before iframe is removed
+                });
+            }
+
+    var From = 0;
+    var To = 0;
+    var StagerId = 0;
+
+    $('#DateRange').daterangepicker({
+        singleDatePicker: false,
+        startDate: moment().subtract(0, 'days'),
+    }, function (start, end, label) {
+        From = (moment(start).format("MM/DD/YYYY"));
+        To = (moment(end).format("MM/DD/YYYY"));
+                
+    });
+
+    function StagerReport() {
+        if (!From == 0) {
+            $.ajax({
+                type: "GET",
+                async: true,
+                url: '@Url.Action("StagerReport", "StagerReport")',
+                data: { From: From, To: To, StagerId: StagerId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    var item = $.parseJSON(data);
+                    var table = document.getElementsByTagName("table")[0];
+                    var rowCount = table.rows.length;
+
+                    for (var i = rowCount - 1; i > 0; i--) {
+                        table.deleteRow(i);
+                    }
+                    var total = 0.00;
+                    for (var i = 0; i < item.length; i++) {
+
+                        $("#table tbody").each(function () {
+                            $(this).append("<tr><td>" + moment(item[i].patientCheckDate).format("DD-MMM-YYYY") + "</td><td>" + item[i].checkId + "</td><td>" + item[i].patientName + "</td><td>" + item[i].doctornote + "</td><td>" + item[i].registrationFee + "</td></tr>");
+                        });
+
+                        total += item[i].registrationFee;
+                    }
+                    $("#Total").text(total);
+                    $("#Range").text("From: " + moment(From).format("DD-MMM-YYYY") + " To: " + moment(To).format("DD-MMM-YYYY"));
+                    $("#Now").text(moment(Date.now()));
+                    $("#StagerName").text("Stager: " + $("#Stager").val());
+                },
+                error: function (xhr) { alert("Error"); }
+            });
+        } else {
+            alert("Please enter a valid date!")
+        }
+        if (!StagerId == 0) {
+            $.ajax({
+                type: "GET",
+                async: true,
+                url: '@Url.Action("StagerReport", "StagerReport")',
+                data: { From: From, To: To, StagerId: StagerId },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    var item = $.parseJSON(data);
+                    var table = document.getElementsByTagName("table")[0];
+                    var rowCount = table.rows.length;
+
+                    for (var i = rowCount - 1; i > 0; i--) {
+                        table.deleteRow(i);
+                    }
+                    var total = 0.00;
+                    for (var i = 0; i < item.length; i++) {
+
+                        $("#table tbody").each(function () {
+                            $(this).append("<tr><td>" + moment(item[i].patientCheckDate).format("DD-MMM-YYYY") + "</td><td>" + item[i].checkId + "</td><td>" + item[i].patientName + "</td><td>" + item[i].doctornote + "</td><td>" + item[i].registrationFee + "</td></tr>");
+                        });
+
+                        total += item[i].registrationFee;
+                    }
+                    $("#Total").text(total);
+                    $("#Range").text("From: " + moment(From).format("DD-MMM-YYYY") + " To: " + moment(To).format("DD-MMM-YYYY"));
+                    $("#Now").text(moment(Date.now()));
+                    $("#StagerName").text("Stager: " + $("#Stager").val());
+                },
+                error: function (xhr) { alert("Error"); }
+            });
+        } else {
+            alert("Please select a stager!")
+        }
+    }
+        
+     $("#Stager").autocomplete({
+
+        open: function (event, ui) {
+            $('#searchID').val('0');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteStudentSelect", "StagerReport")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus: true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            StagerId = ui.item.id;
+            //Tags for display
+            this.value = ui.item.label;
+
+            return false;
+        },
+        close: function (event, ui) { }
+    });
+
+     //$(document).ready(function () {
+     //   var table = $('#table').DataTable({
+     //       //dom: 'Bfrtip',
+     //       lengthChange: false,
+     //       paging: false,
+     //       searching: false,
+     //       buttons: ['copy', 'csv', 'excel', 'pdf', 'colvis', 'print']
+     //   });
+
+     //   table.buttons().container()
+     //        .appendTo('#example_wrapper .col-md-6:eq(0)');
+     //});
+
+    //$(document).ready(function func() {
+    //    var table = $('#table').DataTable();
+    //    table.rows().eq(0).each(function (index) {
+    //        table.cell(index, 0).data(moment(table.cell(index, 0).data()).format("DD-MMM-YYYY"));
+    //    });
+    //});
+</script>
+

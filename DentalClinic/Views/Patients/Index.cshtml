@@ -1,0 +1,142 @@
+﻿@model IEnumerable<DentalClinic.Models.Patient>
+
+
+
+<div class="card">
+    <div class="card-header p-2">
+        <div class="row">
+            <h4 class="font-weight-light text-center m-0 col col-10">Patient List</h4>
+            <div class="col col-2">
+                <button onclick="NewPtient();" class="btn btn-success btn-sm float-right">
+                    <i class="fas fa-plus"></i> New Patient
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table  class="table table-bordered table-hover" id="table" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th hidden>ID</th>
+                    <th>Name</th>
+                    <th>L.Name</th>
+                    <th>GENDER</th>
+                    <th>DATE OF BIRTH</th>
+                    <th>JOB</th>
+                    <th>PHONE</th>
+                    <th>ADDRESS</th>
+                    <th>OPTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td hidden>
+                            @Html.DisplayFor(modelItem => item.PatientId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>@item.Gender.Name</td>
+                        <td>@item.DataOfBrith</td>
+                        <td>@item.Job</td>
+                        <td>@item.Phone</td>
+                        <td>@item.Address</td>
+                        <td>
+                            <span class="pr-1"><a href="#" onclick="getPatientID();" class="text-success"><i class="fas fa-edit"></i>  </a></span>
+                            <span class="pl-1"><a asp-action="Delete" asp-route-id="@item.PatientId" class="text-danger ml-1" onclick="return confirm('Are you sure to delete this record?')"><i class="fas fa-trash"></i>  </a></span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>   
+    </div>
+</div>
+
+
+<div id='PatientModal' class="modal fade">
+    <div class="modal-dialog" style="width: 100%;">
+        <div class="modal-content">
+            <div id='PatientModalContent'>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var BirthDate;
+
+    function getPatientID() {
+        var table = document.getElementsByTagName("table")[0], Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[8].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                BirthDate = moment(table.rows[Index].cells[4].innerHTML).format("MM/DD/YYYY");
+                NewPtient(table.rows[Index].cells[0].innerHTML);
+            };
+        }
+    }
+
+    function NewPtient(id=0) {
+        var options = { "backdrop": "static", keyboard: true };
+        
+        $.ajax({
+
+            url: '@Url.Action("NewPatient", "Patients")',
+            type: 'get',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: {id:id},//scgid: $("#hiddenSessionClassGroupID").val() },
+            datatype: "json",
+
+            success: function (data) {
+                //debugger;
+                $('#PatientModalContent').html(data);
+                $('#PatientModal').modal(options);
+                $('#PatientModal').modal('show');
+                $.validator.unobtrusive.parse("#PatientForm"); // for binding guardian form J
+
+                $('#PatientModal').on('shown.bs.modal', function () {
+                    $('#patientName').focus();
+                    if (id > 0) {
+                        $('#dateOfBirth').val(BirthDate);
+                        $('#Option').val('patient');
+                    } else {
+                        $('#dateOfBirth').val(moment(Date.now()).format("MM/DD/YYYY"));
+                        $('#Option').val('Edit');
+                    }
+                })
+                return false;
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+                return false;
+            }
+        });
+    }
+
+     $(document).ready(function () {
+        var table = $('#table').DataTable({
+            dom: 'Bfrtip',
+            lengthChange: false,
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'colvis', 'print']
+        });
+
+        table.buttons().container()
+             .appendTo('#example_wrapper .col-md-6:eq(0)');
+     });
+
+    $(document).ready(function func() {
+        var table = $('#table').DataTable();
+        table.rows().eq(0).each(function (index) {
+            table.cell(index, 4).data(moment(table.cell(index, 4).data()).format("DD-MMM-YYYY"));
+        });
+    });
+        
+</script>

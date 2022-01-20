@@ -1,0 +1,71 @@
+﻿@model DentalClinic.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+    <title>Dental Clinic - Login</title>
+
+    <link href="~/lib/Dashboard/css/sb-admin.css" rel="stylesheet" />
+</head>
+
+<body class="bg-light">
+    
+    <div class="row m-0 pt-5">
+        @*<div class="p-0 col-xl-9 col-sm-6 img-fluid">
+            <img src="~/lib/images/cover4.jpg" style="width:100%;"/>
+        </div>*@
+        <div class="p-0 mx-auto shadow-sm p-4 mt-5 rounded" style="height:400px; width:350px; background-color:gainsboro">
+            <div class="text-center">
+                <img src="~/lib/images/GhalibLogo.png" class="img-fluid rounded-circle d-b m-auto shadow-lg" width="100" />
+            </div>
+            <label class="mb-0">User Login</label>
+            <div class="border border-warning mt-1 shadow-lg">
+
+            </div>
+            <form method="post">
+                <div class="form-group">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="my-2 shadow-lg form-label-group">
+                        <input type="text" asp-for="Username" id="username" class="form-control" placeholder="Username" required="required" autocomplete="off" />
+                        <label for="username">Username</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="shadow-lg form-label-group">
+                        <input type="password" asp-for="Password" id="password" class="form-control" placeholder="Password" required="required" />
+                        <label for="password">Password</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-info btn-block shadow-lg">Login</button>
+                </div>
+                <div class="d-flex justify-content-between my-2">
+                    @*<a href="#" style="font-size:14px;">Forgot Password?</a>*@
+                    <p style="font-size:14px;"><input asp-for="RememberMe" type="checkbox"> Remember Me</p>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+
+    <script src="~/lib/Dashboard/vendor/jquery/jquery.min.js"></script>
+    <script src="~/lib/Dashboard/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="~/lib/Dashboard/vendor/jquery-easing/jquery.easing.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+﻿@model DentalClinic.Models.Student
+
+
+<form id="StudentForm" name="StudentForm">
+    <div class="card">
+        <div class="card-header">
+            New Student
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class=" col col-12">
+                    <div class="input-group">
+                        <input type="text" id="search" placeholder="Search" class="form-control" autocomplete="off" />
+                        <input type="hidden" id="searchID"/>
+                        <div class="input-group-append">
+                            <button type="button" class="input-group-text" id="searchBtn" value="Search" onclick="searchStudent();"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-12 mt-1 mb-3">
+                    <div class="card">
+                        <div class="card-header p-2 pl-4">Student Info</div>
+                        <div class="card-body p-0 pr-1 pl-1 overflow-auto" style="height:120px;">
+                            <table class="table table-hover table-sm mt-1" id="t">
+                                <thead>
+                                    <tr class="table-sm">
+                                        <th hidden>SSGID</th>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Session</th>
+                                        <th>Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-12">
+                    <nav>
+                        <div class="nav nav-tabs border rounded-top" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#StudentDetails" role="tab" aria-controls="nav-home" aria-selected="true"><i class="fas fa-info-circle"></i> Student Details </a>
+                            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#StudentSession" role="tab" aria-controls="nav-profile" aria-selected="false"><i class="fas fa-code-fork"></i> Student Session</a>
+                        </div>
+                    </nav>
+                    <div class="tab-content border-left border-bottom border-right p-2 mb-4 rounded-bottom" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="StudentDetails" role="tabpanel" aria-labelledby="nav-home-tab">
+                            <div class="row">
+                                <div class="col col-12">
+                                    <div class="card">
+                                        <div class="card-header p-2">
+                                            Student Details
+                                            <input type="button" onclick="ClearStudent();" class="btn btn-success btn-sm p-0 pr-1 pl-1 m-0 float-right" value="New *" />
+                                        </div>
+                                        <div class="card-body">
+                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                            <input type="hidden" asp-for="StudentId" id="StudentId" value="0" />
+                                            <div class="form-row">
+                                                <div class="form-group col col-md-6">
+                                                    <label asp-for="Name" class="control-label">Name:</label>
+                                                    <input asp-for="Name" class="form-control" autocomplete="off" id="Name"  placeholder="Student Name"/>
+                                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                                </div>
+                                                <div class="form-group col col-md-6">
+                                                    <label asp-for="FatherName" class="control-label">Father Name:</label>
+                                                    <input asp-for="FatherName" class="form-control" autocomplete="off" id="FatherName" placeholder="Student Father Name" />
+                                                    <span asp-validation-for="FatherName" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col col-md-6">
+                                                    <label asp-for="LastName" class="control-label">Last Name:</label>
+                                                    <input asp-for="LastName" class="form-control" autocomplete="off" id="LastName" placeholder="Student Last Name"/>
+                                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                                </div>
+                                                <div class="form-group col col-md-6">
+                                                    <label asp-for="Phone" class="control-label">Phone:</label>
+                                                    <input asp-for="Phone" class="form-control" autocomplete="off" id="Phone"  placeholder="(0093)-000-000-000"/>
+                                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer pt-1 pb-1 alert-light">
+                                            <div class="row">
+                                                <div class="col col-2 p-1">
+                                                    <input type="button" class="btn btn-primary btn-sm btn-block" value="Save" onclick="AddOrEditStudent();" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="StudentSession" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <div class="col col-12 p-0 mb-2">
+                                <div class="row">
+                                    <div class="col col-12 mt-2" id="SessionContent">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script>
+
+    function ClearStudent() {
+        $("#Name").val("");
+        $("#FatherName").val("");
+        $("#LastName").val("");
+        $("#Phone").val("");
+        $("#StudentId").val("0");
+    }
+
+    function searchStudent() {
+
+        var search = $("#searchID").val();
+
+        //if (document.getElementById('id').checked)
+        //    search = $("#search").val();
+        //else if (document.getElementById('name').checked)
+        //    search = $("#AutoPatientSearchID").val();
+        //else
+        //    alert("Please select a search option")
+
+        if (search != '') {
+            $.ajax({
+                type: "GET",
+                async: true,
+                url: '@Url.Action("searchStudent", "StudentViewModel")',
+                data: { studentID: search },
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    var item = $.parseJSON(data);
+                    var table = document.getElementsByTagName("table")[1];
+                    var rowCount = table.rows.length;
+              
+                    for (var i = rowCount - 1; i > 0; i--) {
+                        table.deleteRow(i);
+                    }                    
+                    
+                    $("#Name").val(item.name);
+                    $("#FatherName").val(item.fatherName);
+                    $("#LastName").val(item.lastName);
+                    $("#Phone").val(item.phone);
+                    $("#StudentId").val(item.studentId);
+
+                    for (var i = 0; i < item.sessionNameList.length; i++) {
+                        
+                        $("#t tbody").each(function () {
+                            $(this).append("<tr><td hidden>" + item.listID[i] + "</td><td>" + item.studentIDList[i] + "</td><td>" + item.studentNameList[i] + "</td><td>" + item.sessionNameList[i] + "</td><td><input type='button'  onclick='getSSGDId();' value='Details' class='btn btn-secondary btn-sm pt-0 pb-0 mt-0 mb-0'></td></tr>");
+                        });
+                    }
+                },
+                error: function (xhr) { alert("Error"); }
+            });
+
+        } else {
+            alert("There is no item to search!");
+        }
+    }
+
+    function AddOrEditStudent() {
+
+        if (!$("#StudentForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+        var id=$("#StudentId").val();
+        var name = $("#Name").val();
+        var fatherName = $("#FatherName").val();
+        var lastName = $("#LastName").val();
+        var phone = $("#Phone").val();
+        $.ajax({
+            type: "POST",
+            async: true,
+            url: '@Url.Action("AddOrEditStudent", "StudentViewModel")',
+            data: { id:id, Name: name, FatherName: fatherName, LastName: lastName,Phone:phone },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                $("#StudentId").val(data);
+                $("#searchID").val(data);
+                alert("Student is successfully Saved!");
+                searchStudent();
+            },
+            error: function (xhr) { alert("Error"); }
+
+        });
+    }
+    
+    $("#search").autocomplete({
+
+        open: function (event, ui) {
+            $('#searchID').val('0');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteStudentSelect", "StudentViewModel")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus: true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#searchID").val(ui.item.id);
+            //Tags for display
+            this.value = ui.item.label;
+
+            return false;
+        },
+        close: function (event, ui) { }
+    });
+
+    function getSSGDId() {
+        var table = document.getElementsByTagName("table")[1], Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[4].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                SearchBySSGDId(table.rows[Index].cells[0].innerHTML);
+            };
+        }
+    }
+
+    function SearchBySSGDId(id) {
+
+        $.ajax({
+            type: "GET",
+            async: true,
+            url: '@Url.Action("SearchBySSGDId", "StudentViewModel")',
+            data: { id: id },
+            contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                var item = $.parseJSON(data);
+                
+                $("#Name").val(item.name);
+                $("#FatherName").val(item.fatherName);
+                $("#LastName").val(item.lastName);
+                $("#Phone").val(item.phone);
+                $("#StudentId").val(item.studentId);
+                $("#SessionID").val(item.sessionID);
+                $("#studentGroupID").val(item.studentGroupID);
+                $("#Doctor").val(item.doctorName);
+                $("#AutoDoctorID").val(item.doctorID);
+                $("#SemesterID").val(item.semesterID);
+                $("#Subject").val(item.subjectName);
+                $("#AutoSubjectID").val(item.subjectID);
+                $("#Duration").val(item.duration);
+                $("#SSGDID").val(item.ssgdid);
+
+            },
+            error: function (xhr) { alert("Error"); }
+        });
+    }
+
+
+</script>
+

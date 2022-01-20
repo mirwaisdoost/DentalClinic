@@ -1,0 +1,50 @@
+﻿@model IEnumerable<DentalClinic.Models.PatientCheckFee>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="font-weight-light">Index</h1>
+<br />
+
+<p>
+    <a asp-action="AddOrEdit" asp-controller="PatientCheckFees"
+       class="btn btn-outline-success btn-sm">
+        <i class="fas fa-plus">
+        </i> Add new
+    </a>
+</p>
+<table class="table table-hover">
+    <thead class="table table-sm table-warning">
+        <tr>
+            <th>ID</th>
+            <th>FEE</th>
+            <th>FEE ELEMENT</th>
+            <th>PTIENT REGISTERATION CHECK</th>
+            <th>OPTIONS</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr class="table table-sm">
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientCheckFeeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FeeElement.FeeElementId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientRegisterationCheck.PatientRegisterationCheckId)
+            </td>
+            <td>
+                <span class="pr-1"><a asp-action="AddOrEdit" asp-route-id="@item.PatientCheckFeeId"><i class="fas fa-edit"></i> Edit </a></span>
+                <span class="pl-1"><a asp-action="Delete" asp-route-id="@item.PatientCheckFeeId" class="text-danger ml-1" onclick="return confirm('Are you sure to delete this record?')"><i class="fas fa-trash"></i> Delete </a></span>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

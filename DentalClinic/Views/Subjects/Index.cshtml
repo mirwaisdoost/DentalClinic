@@ -1,0 +1,115 @@
+﻿@model IEnumerable<DentalClinic.Models.Subject>
+
+<div class="card">
+    <div class="card-header">
+        <span>Subject List</span>
+        <button onclick="NewSubject();"
+                class="btn btn-primary btn-sm float-right">
+            <i class="fas fa-plus">
+            </i> Add new
+        </button>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover" id="table" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th hidden>
+                        @Html.DisplayNameFor(model => model.SubjectId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        Options
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td hidden>
+                            @Html.DisplayFor(modelItem => item.SubjectId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            <a href="#" class="text-success" onclick="getSubjectID();"><i class="fas fa-edit"></i></a> 
+                            <a asp-action="Delete" asp-route-id="@item.SubjectId" class="text-danger ml-1"  onclick="return confirm('Are you sure to delete this record?')"><i class="fas fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div id='SubjectModal' class='modal fade'>
+    <div class="modal-dialog modal-sm" style="width: 100%;">
+        <div class="modal-content">
+            <div id='SubjectModalContent'>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function getSubjectID() {
+        var table = document.getElementsByTagName("table")[0], Index;
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].cells[2].onclick = function () {
+                Index = this.parentElement.rowIndex;
+                NewSubject(table.rows[Index].cells[0].innerHTML);
+            };
+        }
+    }
+
+    function NewSubject(id=0) {
+        var options = { "backdrop": "static", keyboard: true };
+
+        $.ajax({
+
+            url: '@Url.Action("NewSubject", "Subjects")',
+            type: 'get',
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            data: {id:id},
+            datatype: "json",
+
+            success: function (data) {
+               //debugger;
+                $('#SubjectModalContent').html(data);
+                $('#SubjectModal').modal(options);
+                $('#SubjectModal').modal('show');
+                $.validator.unobtrusive.parse("#SubjectForm");
+
+                $('#SubjectModal').on('shown.bs.modal', function () {
+                    $('#name').focus();
+                })
+                return false;
+            },
+
+            error: function () {
+                alert("Dynamic content load failed.");
+                return false;
+            }
+        });
+    }
+
+
+       $(document).ready(function () {
+        var table = $('#table').DataTable({
+            dom: 'Bfrtip',
+            lengthChange: false,
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'colvis', 'print']
+        });
+
+        table.buttons().container()
+            .appendTo('#example_wrapper .col-md-6:eq(0)');
+    });
+
+</script>

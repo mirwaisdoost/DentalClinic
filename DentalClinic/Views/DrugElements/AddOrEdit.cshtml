@@ -1,0 +1,81 @@
+﻿@model DentalClinic.Models.DrugElement
+
+
+<form id="DrugElementForm" name="DrugElementForm">
+    <div class="card">
+        <div class="card-header">
+            Add New Drug Element
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="DrugElementId" id="DrugElementId"/>
+
+                <div class="form-group col col-12">
+                    <label asp-for="DrugTypeId" class="control-label">Drug Type:</label>
+                    <select asp-for="DrugTypeId" class="form-control" asp-items="ViewBag.DrugTypeId" id="DrugType"></select>
+                    <span asp-validation-for="DrugTypeId" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-md-12">
+                    <label asp-for="Name" class="control-label">Name:</label>
+                    <input asp-for="Name" class="form-control" id="name" placeholder="Enter a drug name" autocomplete="off"/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-12">
+                    <label asp-for="CompanyId" class="control-label">Company:</label>
+                    <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId" id="company"></select>
+                    <span asp-validation-for="CompanyId" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-md-12">
+                    <label asp-for="Price" class="control-label">Price:</label>
+                    <input asp-for="Price" class="form-control" id="price" placeholder="0" autocomplete="off"/>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer alert-light">
+            <div class="row col col-5 float-right">
+                <div class="col col-6 p-1">
+                    <input type="submit" class="btn btn-primary btn-sm btn-block" value="Save" onclick="AddOrEditDrugElement();" />
+                </div>
+                <div class="col col-6 p-1">
+                    <button class="btn btn-secondary btn-sm btn-block" data-dismiss="modal"> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+<script>
+    function AddOrEditDrugElement() {
+        if (!$("#DrugElementForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+        var name = $("#name").val();
+        var DrugType = $("#DrugType").val();
+        var name = $("#name").val();
+        var company = $("#company").val();
+        var price = $("#price").val();
+        var id = $("#DrugElementId").val();
+
+        $.ajax({
+            type: "POST",
+            async:true,
+            url: '@Url.Action("AddOrEdit", "DrugElements")',
+            data: {id:id, name: name,DrugType:DrugType,company:company,price:price },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                location.href='/DrugElements/Index';
+            },
+            error: function (xhr) { alert("Error"); }
+
+        });
+    }
+</script>
+

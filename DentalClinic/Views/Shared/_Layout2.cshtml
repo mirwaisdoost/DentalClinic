@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <environment names="Development">
+        <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+        <script src="~/lib/jquery/jquery-ui.js"></script>
+        <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+        <link href="~/lib/bootstrap/css/site.css" rel="stylesheet" /> <!--showing the list for auto complete text box-->
+        <link href="~/lib/bootstrap/css/fontawesome-all.css" rel="stylesheet" />
+        <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/lib/bootstrap/css/fonts.css" rel="stylesheet" />
+        <link href="~/lib/bootstrap/css/Ccss.css" rel="stylesheet" />
+        <script src="~/lib/Print/divjs.js"></script>
+
+        @*<script src="~/lib/bootstrap/js/jquery-1.12.4.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrapjquery.js"></script>*@
+    </environment>
+    <title>@ViewBag.Title</title>
+</head>
+
+<body>
+    <nav id="sidebar" class=" bg-secondary">
+        <div class="sidebar-header bg-secondary">
+            <div class="text-center">
+                <img src="~/lib/images/GhalibLogo.png" class="img-fluid rounded-circle d-b m-auto shadow-lg" width="100" />
+            </div>
+        </div>
+
+        <ul class="list-unstyled components shadow-sm">
+            <p class="text-warning"> Qiuck Links</p>
+            <li>
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class=" bg-secondary dropdown-toggle"><i class="fas fa-edit"></i> Add/Edit</a>
+                <ul class="collapse list-unstyled bg-warning" id="homeSubmenu">
+                    <li>
+                        <a asp-action="Index" asp-controller="Account" class="bg-secondary">User list</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Companies" class="bg-secondary">Compay list</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Doctors" class="bg-secondary">Doctor list</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="DrugElements" class="bg-secondary">Drug Element</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="DrugTypes" class="bg-secondary">Drug Type</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="FeeElements" class="bg-secondary">Fee Element</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="FeeTypes" class="bg-secondary">Fee Type</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="HistoryElements" class="bg-secondary">Histoy Element</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Patients" class="bg-secondary">Patients</a>
+                    </li>
+                    <li>
+                        <a asp-action="AddOrEdit" asp-controller="PatientRegisterations" class="bg-secondary" onclick="NewRegister();">Patient Registeration</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="StudentViewModel" class="bg-secondary">Student</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="StudentGroups" class="bg-secondary">Student Group</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="TeethNumbers" class="bg-secondary">Teeth Number</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Semester" class="bg-secondary">Semester</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Sessions" class="bg-secondary">Session</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Subjects" class="bg-secondary">Subject</a>
+                    </li>
+                   
+                    @*<li>
+                        <a asp-action="Index" asp-controller="PatientCheckFees" class="bg-secondary">Patient Check Fee</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="PatientHistories" class="bg-secondary">Patient History</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="PatientRegisterationChecks" class="bg-secondary">Patient Registeration Check</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="PatientRegisterationCheckDrugs" class="bg-secondary">Patient Registeration Check Drug</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="PatientRegisterationCheckFeeElements" class="bg-secondary">Patient Registeration Check Fee Element</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="PatientRegisterationPayments" class="bg-secondary">Patient Registeration Payment</a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="PatientTeeth" class="bg-secondary">Patient Teeth</a>
+                    </li>*@
+                </ul>
+            </li>
+
+            <li>
+                <a href="#">About</a>
+            </li>
+            <li>
+                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle bg-secondary"><i class="fas fa-file"> </i> Reports</a>
+                <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <li>
+                        <a href="#" class="bg-secondary">Registered Patients</a>
+                    </li>
+                    <li>
+                        <a href="#" class="bg-secondary">Invoices</a>
+                    </li>
+                    <li>
+                        <a href="#" class="bg-secondary">Patient History</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Services</a>
+            </li>
+            <li>
+                <a href="#">Contact Us</a>
+            </li>
+        </ul>
+    </nav>
+
+
+    <div id="container">
+        <nav class="navbar navbar-expand navbar-light bg-light m-0 pt-2 pb-2">
+
+            <button id="sidebarCollapse" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> <span></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a asp-action="Login" asp-controller="Account" class=" btn btn-outline-secondary btn-sm">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+ 
+        <div class="pl-2 pr-2 mt-2">
+            @RenderBody()
+            @RenderSection("Scripts", required: false)
+        </div>
+    </div>
+
+    <script>
+       
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function toggle() {
+                var fas = document.getElementById("sidebarCollapse");
+                var sd = document.getElementById("sidebar");
+                var el = document.getElementById("container");
+
+                if (sd.style.marginLeft === "-250px") {
+                    sd.style.marginLeft = "0px";
+                    fas.innerHTML = '<i class="fas fa-arrow-right"></i>';
+                }else {
+                    sd.style.marginLeft = "-250px";
+                }
+
+                if (el.style.marginLeft === "0px") {
+                    el.style.marginLeft = "250px";
+                    fas.innerHTML = '<i class="fas fa-arrow-left"></i>';
+                } else {
+                    el.style.marginLeft = "0px";
+                    fas.innerHTML = '<i class="fas fa-arrow-right"></i>';
+                }
+
+            });
+        });
+    </script>
+
+</body>
+</html>

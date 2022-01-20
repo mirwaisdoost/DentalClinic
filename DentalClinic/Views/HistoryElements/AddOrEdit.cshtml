@@ -1,0 +1,68 @@
+﻿@model DentalClinic.Models.HistoryElement
+
+
+<form id="HistoryElementForm" name="HistoryElementForm">
+    <div class="card">
+        <div class="card-header">
+            Add New Disease
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="HistoryElementId" id="HistoryElementId"/>
+                <div class="form-group col col-12">
+                    <label asp-for="Name" class="control-label">Name:</label>
+                    <input asp-for="Name" class="form-control" id="name" autocomplete="off"/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-12">
+                    <label asp-for="ApplyToGender" class="control-label">Gender:</label>
+                    <select asp-for="ApplyToGender"  class="form-control" id="gender" 
+                            asp-items="@(new SelectList(@ViewBag.gender,"Id","Name"))"></select>
+                    <span asp-validation-for="ApplyToGender" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer alert-light">
+            <div class="row">
+                <div class="col col-6 p-1">
+                    <input type="button" class="btn btn-primary btn-sm btn-block" value="Save" onclick="AddOrEditHistoryElement();"/>
+                </div>
+                <div class="col col-6 p-1">
+                    <button class="btn btn-secondary btn-sm btn-block" data-dismiss="modal"> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+<script>
+
+    function AddOrEditHistoryElement() {
+        if (!$("#HistoryElementForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+        var name = $("#name").val();
+        var gender = $("#gender").val();
+        var id = $("#HistoryElementId").val();
+        $.ajax({
+            type: "POST",
+            async:true,
+            url: '@Url.Action("AddOrEdit", "HistoryElements")',
+            data: { id:id,name: name, gender:gender },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                location.href='/HistoryElements/Index';
+            },
+            error: function (xhr) { alert("Error"); }
+
+        });
+    }
+</script>
+

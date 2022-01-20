@@ -1,0 +1,61 @@
+﻿<div class="card">
+    <div class="card-header">
+        Add new drug
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="form-group col col-12">
+                <label> Drug Type:</label>
+                @*<input type="text" class="form-control" id="drugTypeID" placeholder="Search" style="z-index: 2;" />*@
+                <select class="form-control" style="width:100%;" id="drugType"></select>
+            </div>
+            <div class="form-group col col-12">
+                <label><span class="glyphicon glyphicon-eye-open"></span> Drug:</label>
+                <input type="text" class="form-control" id="drugID" placeholder="Search" />
+            </div>
+            <div class="form-group col col-12">
+                <label><span class="glyphicon glyphicon-eye-open"></span> Quantity:</label>
+                <input type="number" class="form-control" id="quantity" placeholder="0" />
+            </div>
+        </div>
+    </div>
+    <div class="card-footer alert-light">
+        <div class="row">
+            <div class="col col-2 p-1 float-right">
+                <button class="btn btn-primary btn-sm btn-block" onclick="AddTable4Row();"> Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#drugType").select2({
+        ajax: {
+            url: '@Url.Action("AutoCompleteDrugTypeSelect", "PatientRegisterations")',
+            type: 'post',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term, // search term
+                    //page: params.page
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.label,
+                            id: item.id,
+                        }
+                    })
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Search',
+    });
+
+</script>

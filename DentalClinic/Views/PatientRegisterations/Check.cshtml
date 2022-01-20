@@ -1,0 +1,174 @@
+﻿@model DentalClinic.Models.PatientRegisterationCheck
+
+
+
+<div class="col col-12 p-0 mb-2">
+    <div class="row m-0 p-0">
+        <div class="col col-12 m-0 p-0 mt-2">
+            <div class="card">
+                <div class="card-header text-center p-2">
+                    Patient Check Details
+                    <span class="float-right"><button onclick="NewCheck();" class="btn btn-success btn-sm"><i class="fas fa-plus-square"></i> New Check</button></span>
+                </div>
+                <div class="card-body p-0 pr-1 pl-1 overflow-auto" style="height:150px;">
+                    <table class="table table-hover table-sm mt-1" id="Check">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Check#</th>
+                                <th>Drug_Fee</th>
+                                <th>Other_Fees</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col col-12 m-0 p-0 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        
+                        <form id="CheckForm" name="CheckForm" class="row col col-12">
+                            <div class="form-group col col-6">
+                                <label class="control-label">Date:</label>
+                                <input asp-for="CheckDate" type="text" class="form-control" id="checkDate" />
+                                <input asp-for="PatientRegisterationId" type="hidden" class="form-control" />
+                                <input asp-for="PatientRegisterationCheckId" type="hidden" class="form-control" />
+                                <span asp-validation-for="CheckDate" class="text-danger"></span>
+                                <input type="hidden" id="patientCheckID" />
+                            </div>
+                            <div class="form-group col col-6">
+                                <label class="control-label">Stager:</label>
+                                <input class="form-control" type="hidden" placeholder="Id" id="StudentId" />
+                                <input asp-for="StudentId" type="text" class="form-control" placeholder="Search Stager" id="StudentName" />
+                                <span asp-validation-for="StudentId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col col-12">
+                                <label class="control-label">Notes:</label>
+                                <input class="form-control" placeholder="Some notes here" id="DoctorNote" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-12 mb-2 p-0">
+            <div class="row mt-1">
+                <div class="col col-7 pr-1">
+                    <div class="card">
+                        <div class="card-header text-center p-2"> Drug List <button class="btn btn-outline-dark btn-sm float-right p-0 pl-1 pr-1 m-0 " data-toggle="modal" data-target="#patientcheck"><i class="fas fa-plus-square"></i></button></div>
+                        <div class="card-body p-1 overflow-auto" style="height:150px;">
+                            <div>
+                                <table id="Drug" class="table table-hover table-sm">
+                                    <thead class="table-sm text-center">
+                                        <tr>
+                                            <th>Drug</th>
+                                            <th>QNT</th>
+                                            <th>Price</th>
+                                            <th>Total</th>
+                                            <th>Options</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-5 pl-0">
+                    <div class="card">
+                        <div class="card-header text-center p-2"> Service List <button class="btn btn-outline-dark btn-sm float-right p-0 pl-1 pr-1 m-0 " data-toggle="modal" data-target="#otherFeesModal"><i class="fas fa-plus-square"></i></button> </div>
+                        <div class="card-body overflow-auto p-1" style="height:150px;">
+                            <div>
+                                <table id="OtherCheck" class="table table-hover table-sm">
+                                    <thead class="table-sm text-center">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Option</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row col col-12">
+                <div class="col col-1 p-0 mt-2">
+                    <input type="button" class="btn btn-primary btn-block btn-sm" value="Save" onclick="Check();" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-4"></div>
+        <div class="col col-2">
+            <input id="AutoDrugTypeID" type="hidden" class="form-control m-0 " placeholder="Patient ID" />
+        </div>
+        <div class="col col-2">
+            <input id="AutoDrugID" type="hidden" class="form-control m-0 " placeholder="Sickness ID" />
+        </div>
+        <div class="col col-2">
+            <input id="AutoDrugName" type="hidden" class="form-control m-0 " placeholder="Sickness ID" />
+        </div>
+        <div class="col col-2">
+            <input id="AutoDrugPrice" type="hidden" class="form-control m-0 " placeholder="Sickness ID" />
+        </div>
+        <div class="col col-2">
+            <input id="AutoFeeTypeID" type="hidden" class="form-control m-0 " placeholder="Sickness ID" />
+        </div>
+        <div class="col col-2">
+            <input id="AutoFeeElementID" type="hidden" class="form-control m-0 " placeholder="Sickness ID" />
+        </div>
+        <div class="col col-2">
+            <input id="AutFeeElementName" type="hidden" class="form-control m-0 " placeholder="Sickness ID" />
+        </div>
+        <div class="col col-2">
+            <input id="AutoFeeElementPrice" type="hidden" class="form-control m-0 " placeholder="Sickness ID" />
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#checkDate').daterangepicker({
+        singleDatePicker: true,
+        startDate: moment().subtract(0, 'days'),
+    }, function (start, end, label) {
+            CDate = (moment(start).format("DD-MM-YYYY"));
+    });
+
+       $("#StudentName").autocomplete({
+
+        open: function (event, ui) {
+            $('#StudentId').val('');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteStudentSelect", "PatientRegisterations")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus:true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#StudentId").val(ui.item.id);
+
+            //Tags for display
+            this.value = ui.item.label;
+            return false;
+        },
+        close: function (event, ui) { }
+    });
+
+</script>

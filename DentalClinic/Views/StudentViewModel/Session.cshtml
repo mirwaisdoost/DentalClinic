@@ -1,0 +1,180 @@
+﻿@model DentalClinic.Models.StudentSessionGroupDoctor
+
+
+<form id="SessionForm" name="SessionForm">
+    <div class="card">
+        <div class="card-header p-2">
+            Student Session
+            <input type="button" onclick="ClearSSGD();" class="btn btn-success btn-sm p-0 pr-1 pl-1 m-0 float-right" value="New *"/>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col col-md-6">
+                    <label asp-for="SessionId" class="control-label">Session:</label>
+                    <select asp-for="SessionId" class="form-control" id="SessionID" asp-items="@(new SelectList(@ViewBag.session,"SessionId", "Name"))">
+                        <option value="" hidden disabled selected>Select</option>
+                    </select>
+                    <span asp-validation-for="SessionId" class="text-danger"></span>
+                    <input asp-for="StudentSessionGroupDoctorId" type="hidden" id="SSGDID" class="form-control" value="0"/>
+                    <input asp-for="StudentId" type="hidden"  class="form-control" value="0"/>
+                </div>
+                <div class="form-group col col-md-6">
+                    <label asp-for="GroupId" class="control-label">Group:</label>
+                    <select asp-for="GroupId" class="form-control" id="studentGroupID" asp-items="@(new SelectList(@ViewBag.studentGroup,"StudentGroupId","Name"))">
+                        <option value="" hidden disabled selected>Select</option>
+                    </select>
+                    <span asp-validation-for="GroupId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col col-md-6">
+                    <label asp-for="DoctorId" class="control-label">Doctor:</label>
+                    <input type="hidden"class="form-control" id="AutoDoctorID" />
+                    <input asp-for="DoctorId"  type="text" placeholder="Search" id="Doctor" class="form-control" />
+                    <span asp-validation-for="DoctorId" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-md-6">
+                    <label asp-for="SemesterId" class="control-label">Semester:</label>
+                    <select asp-for="SemesterId" class="form-control" id="SemesterID" asp-items="@(new SelectList(ViewBag.semester,"SemesterId", "Name"))">
+                        <option value="" hidden disabled selected>Select</option>
+                    </select>
+                    <span asp-validation-for="SemesterId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col col-md-6">
+                    <label asp-for="SubjectId" class="control-label">Subject:</label>
+                    <input type="hidden" class="form-control" id="AutoSubjectID" />
+                    <input asp-for="SubjectId" type="text" id="Subject" class="form-control" placeholder="Search" />
+                    <span asp-validation-for="SubjectId" class="text-danger"></span>
+                </div>
+                <div class="form-group col col-md-6">
+                    <label asp-for="Duration" class="control-label">Duration:</label>
+                    <input asp-for="Duration" class="form-control" id="Duration" autocomplete="off" />
+                    <span asp-validation-for="Duration" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer pt-1 pb-1 alert-light">
+            <div class="row">
+                <div class="col col-2 p-1">
+                    <input type="button" class="btn btn-primary btn-sm btn-block" value="Save" onclick="AddOrEditStudentSession();" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script>
+        
+    function ClearSSGD() {
+        $("#SessionID").val("");
+        $("#studentGroupID").val("");
+        $("#AutoDoctorID").val("");
+        $("#Doctor").val("");
+        $("#SemesterID").val("");
+        $("#AutoSubjectID").val("");
+        $("#Subject").val("");
+        $("#Duration").val("");
+        $("#SSGDID").val("0");
+    }
+
+
+
+    function AddOrEditStudentSession() {
+
+        if (!$("#SessionForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+        var StudentId = $("#StudentId").val();
+        var SessionId = $("#SessionID").val();
+        var GroupId = $("#studentGroupID").val();
+        var DoctorId = $("#AutoDoctorID").val();
+        var SemesterId = $("#SemesterID").val();
+        var SubjectId = $("#AutoSubjectID").val();
+        var Duration = $("#Duration").val();
+        var SSGDID = $("#SSGDID").val();
+
+        if (StudentId == 0)
+            alert("No student is selected!");
+        else {
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: '@Url.Action("AddOrEditStudentSession", "StudentViewModel")',
+                data: {
+                    SSGDID: SSGDID, StudentId: StudentId, SessionId: SessionId, GroupId: GroupId, DoctorId: DoctorId, SemesterId: SemesterId,
+                    SubjectId: SubjectId, Duration: Duration
+                },
+                //contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (data) {
+                    alert("New information are successfully Saved!")
+                    searchStudent();
+                },
+                error: function (xhr) { alert("Error"); }
+
+            });
+        }
+    }
+
+     $("#Doctor").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoDoctorID').val('0');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteDoctorSelect", "PatientRegisterations")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus:true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoDoctorID").val(ui.item.id);
+            //Tags for display
+            this.value = ui.item.label;
+
+            return false;
+        },
+        close: function (event, ui) {  }
+     });
+
+
+     $("#Subject").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoSubjectID').val('0');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteSubjectSelect", "StudentViewModel")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus:true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoSubjectID").val(ui.item.id);
+            //Tags for display
+            this.value = ui.item.label;
+
+            return false;
+        },
+        close: function (event, ui) {  }
+    });
+</script>
+

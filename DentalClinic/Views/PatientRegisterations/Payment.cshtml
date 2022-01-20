@@ -1,0 +1,260 @@
+﻿@model DentalClinic.Models.PatientRegisterationPayment
+
+
+    
+        <div class="col col-12 mb-2 p-0">
+            <div class="row m-0 p-0">
+                <div class="col col-12 m-0 p-0 mt-2">
+                    <div class="card">
+                        <div class="card-header text-center p-2" id="patientDetalis">
+                            All Payments
+                            <span class="float-right"><button class="btn btn-success btn-sm" onclick="NewPayment();"><i class="fas fa-plus-square"></i> New Payment</button></span>
+                        </div>
+                        <div class="card-body p-0 pr-1 pl-1 overflow-auto" style="height:150px;">
+                            <table class="table table-sm mt-1 table-hover" id="AllPayments">
+                                <thead class="table-sm">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Payment#</th>
+                                        <th>Check#</th>
+                                        <th>Drug_Fee</th>
+                                        <th>Other_Fees</th>
+                                        <th>Paid_Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-12 m-0 p-0 mt-2">
+                    <div class="card">
+                        <div class="card-header text-center p-2" id="patientDetalis">Check Payments</div>
+                        <div class="card-body p-0 pr-1 pl-1 overflow-auto" style="height:150px;">
+                            <table class="table table-sm mt-1 table-hover" id="CheckPayments">
+                                <thead class="table-sm">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Payment#</th>
+                                        <th>Check#</th>
+                                        <th>Drug_Fee</th>
+                                        <th>Other_Fees</th>
+                                        <th>Paid_Amount</th>
+                                        <th>Net_Amount</th>
+                                        <th>Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col col-12 m-0 p-0 mt-1">
+                    <div class="col col-12 p-0">
+                        <div class="mr-1 m-0 p-0 pb-1 p-0">
+                            <div class="card ">
+                                <div class="card-header text-center p-2">Payment Details</div>
+                                <div class="card-body p-0 p-4">
+                                    <form id="PaymentForm" name="PaymentForm">
+                                        <div class="row">
+                                            <div class="col col-6">
+                                                <div>
+                                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                    <input type="hidden" asp-for="PatientRegisterationCheckId" />
+                                                    <div class="form-group">
+                                                        <label class="control-label">Payment#:</label>
+                                                        <input class="form-control" id="paymentNumber" placeholder="new" readonly="readonly" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Drug Fee:</label>
+                                                        <input asp-for="DrugTotal" class="form-control" id="drugFee" placeholder="0.00" readonly="readonly" />
+                                                        <span asp-validation-for="DrugTotal" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Other Fees:</label>
+                                                        <input asp-for="FeeTotal" class="form-control" id="otherFee" placeholder="0.00" readonly="readonly" />
+                                                        <span asp-validation-for="FeeTotal" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col col-6">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Date:</label>
+                                                        <input asp-for="Date" type="text" class="form-control" id="paymentDate" />
+                                                        <span asp-validation-for="Date" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Paid:</label>
+                                                        <input asp-for="Payed" class="form-control" id="Received" placeholder="0.00" />
+                                                        <span asp-validation-for="Payed" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Total Fees:</label>
+                                                        <input class="form-control" id="TotalFees" placeholder="0.00" readonly="readonly"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <label class="control-label">Net Payable Amount:</label>
+                                    <div class="input-group">
+                                        <input class="form-control" id="Net" placeholder="0.00" readonly="readonly"/>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary input-group-text " onclick="calculate();"><i class="fas fa-calculator"></i></button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="control-label">Description:</label>
+                                        <textarea type="text" class="form-control" id="Description"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row col col-12">
+                        <div class="col col-1 p-0 mt-2">
+                            <input type="button" class="btn btn-primary btn btn-block btn-sm" value="Save" onclick="Payment();" />
+                        </div>
+                    </div>
+                </div>
+                <div class=" row col col-8 pt-1 pb-1 pl-1 pr-0">
+                    <div class="col col-12 p-0">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-4"></div>
+                <div class="col col-2">
+                    <input id="AutoPatientID" type="hidden" class="form-control m-0 " placeholder="Patient ID" />
+                </div>
+                <div class="col col-2">
+                    <input id="AutoSicknessID" type="hidden" class="form-control m-0 " placeholder="Sickness ID" />
+                </div>
+                <div class="col col-2">
+                    <input id="AutoSicknessName" type="hidden" class="form-control m-0 " placeholder="Sickness Name" />
+                </div>
+                <div class="col col-2">
+                    <input id="AutoDoctorID" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                </div>
+                <div class="col col-2">
+                    <input id="AutoTeethID" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                </div>
+                <div class="col col-2">
+                    <input id="AutoTeethNumber" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                </div>
+                <div class="col col-2">
+                    <input id="AutoTeethLeftorRight" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                </div>
+                <div class="col col-2">
+                    <input id="AutoTeethToporButtom" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                </div>
+                <div class="col col-2">
+                    <input id="AutoTeethAduorChd" type="hidden" class="form-control m-0 " placeholder="Doctor ID" />
+                </div>
+            </div>
+        </div>
+
+  
+
+
+<script>
+      
+    $('#paymentDate').daterangepicker({
+        singleDatePicker: true,
+        startDate: moment().subtract(0, 'days'),
+    }, function (start, end, label) {
+            PDate = (moment(start).format("DD-MM-YYYY"));
+    });
+
+    function AddOrEditStudentSession() {
+
+        if (!$("#SessionForm").data("unobtrusiveValidation").validate()) {
+            return false;
+        }
+
+        var StudentId = $("#StudentId").val();
+        var SessionId = $("#SessionID").val();
+        var GroupId = $("#StudentGroupID").val();
+        var DoctorId = $("#AutoDoctorID").val();
+        var SemesterId = $("#SemesterID").val();
+        var SubjectId = $("#AutoSubjectID").val();
+        var Duration = $("#Duration").val();
+
+        $.ajax({
+            type: "POST",
+            async: true,
+            url: '@Url.Action("AddOrEditStudent", "StudentViewModel")',
+            data: {
+                StudentId:StudentId, SessionId: SessionId, GroupId: GroupId, DoctorId: DoctorId, SemesterId: SemesterId,
+                SubjectId: SubjectId, Duration: Duration
+            },
+            //contentType: "application/json; charset=utf-8",
+            dataType: "html",
+            success: function (data) {
+                $("#StudentId").val(data);
+                location.href = '/StudentViewModel';
+            },
+            error: function (xhr) { alert("Error"); }
+
+        });
+    }
+
+     $("#Doctor").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoDoctorID').val('0');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteDoctorSelect", "PatientRegisterations")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus:true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoDoctorID").val(ui.item.id);
+            //Tags for display
+            this.value = ui.item.label;
+
+            return false;
+        },
+        close: function (event, ui) {  }
+     });
+
+
+     $("#Subject").autocomplete({
+
+        open: function (event, ui) {
+            $('#AutoSubjectID').val('0');
+        },
+
+        source: function (request, response) {
+
+            $.getJSON(
+                '@Url.Action("AutoCompleteSubjectSelect", "StudentViewModel")',
+                { term: request.term },
+                response
+            );
+        },
+        minLength: 1,
+        autoFocus:true,
+
+        select: function (event, ui) {
+            //set tagids to save
+            $("#AutoSubjectID").val(ui.item.id);
+            //Tags for display
+            this.value = ui.item.label;
+
+            return false;
+        },
+        close: function (event, ui) {  }
+    });
+</script>
+
