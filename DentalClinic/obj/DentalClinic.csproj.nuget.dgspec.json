@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\MirwaisDoost\\source\\repos\\TeamProject\\DentalClinic\\DentalClinic\\DentalClinic.csproj": {}
+    "C:\\Users\\Mirwais\\source\\repos\\DentalClinic\\DentalClinic\\DentalClinic.csproj": {}
   },
   "projects": {
-    "C:\\Users\\MirwaisDoost\\source\\repos\\TeamProject\\DentalClinic\\DentalClinic\\DentalClinic.csproj": {
+    "C:\\Users\\Mirwais\\source\\repos\\DentalClinic\\DentalClinic\\DentalClinic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\MirwaisDoost\\source\\repos\\TeamProject\\DentalClinic\\DentalClinic\\DentalClinic.csproj",
+        "projectUniqueName": "C:\\Users\\Mirwais\\source\\repos\\DentalClinic\\DentalClinic\\DentalClinic.csproj",
         "projectName": "DentalClinic",
-        "projectPath": "C:\\Users\\MirwaisDoost\\source\\repos\\TeamProject\\DentalClinic\\DentalClinic\\DentalClinic.csproj",
-        "packagesPath": "C:\\Users\\MirwaisDoost\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\MirwaisDoost\\source\\repos\\TeamProject\\DentalClinic\\DentalClinic\\obj\\",
+        "projectPath": "C:\\Users\\Mirwais\\source\\repos\\DentalClinic\\DentalClinic\\DentalClinic.csproj",
+        "packagesPath": "C:\\Users\\Mirwais\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mirwais\\source\\repos\\DentalClinic\\DentalClinic\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\MirwaisDoost\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Mirwais\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -37,6 +34,9 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "default"
         }
       },
       "frameworks": {
@@ -87,11 +87,12 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100-preview.7.23376.3\\RuntimeIdentifierGraph.json"
         }
       }
     }
