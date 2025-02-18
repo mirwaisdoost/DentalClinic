@@ -186,4 +186,4 @@ C:\Users\Mirwais\source\repos\DentalClinic\DentalClinic\obj\Debug\netcoreapp2.2\
 C:\Users\Mirwais\source\repos\DentalClinic\DentalClinic\obj\Debug\netcoreapp2.2\DentalClinic.dll
 C:\Users\Mirwais\source\repos\DentalClinic\DentalClinic\obj\Debug\netcoreapp2.2\DentalClinic.pdb
 C:\Users\Mirwais\source\repos\DentalClinic\DentalClinic\obj\Debug\netcoreapp2.2\DentalClinic.genruntimeconfig.cache
-C:\Users\Mirwais\source\repos\DentalClinic\DentalClinic\obj\Debug\netcoreapp2.2\DentalClinic.csproj.CopyComplete
+C:\Users\mirwais\source\repos\DentalClinic\DentalClinic\obj\Debug\netcoreapp2.2\DentalCl.30F06633.Up2Date
